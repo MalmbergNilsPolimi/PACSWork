@@ -16,6 +16,7 @@ void readParametersFromJson(Parameters& params, const std::string& filename) {
         params.lTol = j["lTol"].get<double>();
         params.rTol = j["rTol"].get<double>();
         params.initialConditions = j["initialConditions"].get<std::vector<double>>();
+        params.methodLearningRate = j["methodLearningRate"].get<int>();
         file.close();
     } else {
         std::cerr << "Error opening file " << filename << std::endl;
@@ -33,5 +34,6 @@ void printParametersFromJson(Parameters readParams) {
     for (const auto& value : readParams.initialConditions) {
         std::cout << value << " ";
     }
-    std::cout << "]\n" << std::endl;
+    std::cout << "]" << std::endl;
+    std::cout << "methodLearningRate: " << readParams.methodLearningRate << "\n" << std::endl;
 }

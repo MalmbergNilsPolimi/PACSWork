@@ -11,6 +11,7 @@ struct Parameters
     double lTol;
     double rTol;
     std::vector<double> initialConditions;
+    int methodLearningRate;
 };
 
 #endif // MAIN_HPP
