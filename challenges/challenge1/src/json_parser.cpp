@@ -21,3 +21,17 @@ void readParametersFromJson(Parameters& params, const std::string& filename) {
         std::cerr << "Error opening file " << filename << std::endl;
     }
 }
+
+void printParametersFromJson(Parameters readParams) {
+    std::cout << "Parameters read from JSON file:\n";
+    std::cout << "alpha0: " << readParams.alpha0 << std::endl;
+    std::cout << "mu: " << readParams.mu << std::endl;
+    std::cout << "maxIter: " << readParams.maxIter << std::endl;
+    std::cout << "lTol: " << readParams.lTol << std::endl;
+    std::cout << "rTol: " << readParams.rTol << std::endl;
+    std::cout << "Initial conditions: [ ";
+    for (const auto& value : readParams.initialConditions) {
+        std::cout << value << " ";
+    }
+    std::cout << "]\n" << std::endl;
+}
