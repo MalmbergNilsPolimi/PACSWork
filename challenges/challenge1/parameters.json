@@ -1,9 +1,9 @@
 {
-    "alpha0": 0.1,
+    "alpha0": 0.2,
     "mu": 0.2,
-    "maxIter": 100000,
-    "lTol": 0.000001,
-    "rTol": 0.000001,
+    "maxIter": 1e+5,
+    "lTol": 1e-6,
+    "rTol": 1e-6,
     "initialConditions": [0.0 , 0.0],
-    "methodLearningRate": 1
+    "methodLearningRate": 0
 }  
