@@ -60,21 +60,21 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     std::cout << "Searching for the minimum..." << std::endl;
 
     std::vector<double> vectX1((readParams.initialConditions).size());
-    std::vector<double> vectX2((readParams.initialConditions).size());
     
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
     int iter=0;
-    
-    double alphak;
+    double alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient);
+    std::vector<double> vectX2 = vectorDiff(vectX1, prodVectWithCst(functionGradient(vectX1), alphak));
+    ++iter;
 
-    do {
-        std::copy(std::begin(vectX1), std::end(vectX1), std::begin(vectX2));
-        alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient);       
+    while (iter <= readParams.maxIter && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol && vectorNorm(functionGradient(vectX1)) >= readParams.rTol) {
+        std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
+        alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient);
         std::vector<double> tmpVect = vectorDiff(vectX1, prodVectWithCst(functionGradient(vectX1), alphak));
         std::copy(std::begin(tmpVect), std::end(tmpVect), std::begin(vectX2));
         ++iter;
-    } while (iter <= readParams.maxIter && vectorNorm(vectorDiff(vectX2, vectX1)) <= readParams.lTol && vectorNorm(functionGradient(vectX1)) <= readParams.rTol) ;
+    }
 
     return vectX2;
 }
