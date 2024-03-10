@@ -1,21 +1,6 @@
 #include <iostream>
-#include <vector>
-
-#include "json.hpp"
-using json = nlohmann::json;
-
+#include "main.hpp"
 #include "json_parser.hpp"
-
-struct Parameters
-{
-    double alpha0;
-    double mu;
-    int maxIter;
-    double lTol; // tolerance for the control on the step length
-    double rTol; // tolerance for the control on the residual 
-    std::vector<double> initialConditions;
-
-};
 
 int main() {
 
@@ -27,12 +12,13 @@ int main() {
     std::cout << "alpha0: " << readParams.alpha0 << std::endl;
     std::cout << "mu: " << readParams.mu << std::endl;
     std::cout << "maxIter: " << readParams.maxIter << std::endl;
-    std::cout << "ltol: " << readParams.ltol << std::endl;
-    std::cout << "rtol: " << readParams.rtol << std::endl;
-    std::cout << "Initial conditions:\n";
-    for (int i = 0; i < readParams.initialConditions.size(); ++i) {
-        std::cout << "Initial condition " << i + 1 << ": " << readParams.initialConditions[i] << std::endl;
+    std::cout << "ltol: " << readParams.lTol << std::endl;
+    std::cout << "rtol: " << readParams.rTol << std::endl;
+    std::cout << "Initial conditions: ";
+    for (const auto& value : readParams.initialConditions) {
+        std::cout << value << " ";
     }
+    std::cout << std::endl;
 
     return 0;
 }
