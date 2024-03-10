@@ -4,5 +4,5 @@
     "maxIter": 100000,
     "lTol": 0.000001,
     "rTol": 0.000001,
-    "initialConditions": [1.0, 2.5, 3.7, 4.2]
+    "initialConditions": [0.0 , 0.0]
 }  
