@@ -30,6 +30,6 @@ int main() {
     std::cout << "]" << std::endl;
 
     std::cout << "Value of the minimum : " << functionToMinimize(minPoint) << std::endl;
-
+    
     return 0;
 }
