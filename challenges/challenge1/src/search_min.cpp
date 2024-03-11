@@ -1,7 +1,14 @@
+/**
+ * @file search_min.cpp
+ * @brief Implementation of vector operations and minimization functions.
+ */
+
+
 #include <iostream>
 #include <cmath>
 #include <algorithm>
 #include "search_min.hpp"
+
 
 double vectorNorm(const std::vector<double>& vect) {
     double sum_of_squares = 0.0;
@@ -10,6 +17,7 @@ double vectorNorm(const std::vector<double>& vect) {
     }
     return std::sqrt(sum_of_squares);
 }
+
 
 std::vector<double> vectorDiff(const std::vector<double>& vect1, const std::vector<double>& vect2) {
     std::vector<double> vectDiff(vect1.size());
@@ -23,6 +31,7 @@ std::vector<double> vectorDiff(const std::vector<double>& vect1, const std::vect
     return vectDiff;
 }
 
+
 std::vector<double> prodVectWithCst(const std::vector<double>& vect, const double& constant) {
     std::vector<double> newVect(vect.size());
         for (size_t i = 0; i < vect.size(); ++i) {
@@ -30,6 +39,7 @@ std::vector<double> prodVectWithCst(const std::vector<double>& vect, const doubl
         }
     return newVect;
 }
+
 
 double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, std::vector<double> vectXk) {
     double rate;
@@ -64,6 +74,7 @@ double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, 
     }
     return rate;
 }
+
 
 std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters& readParams) {
     std::cout << "Searching for the minimum..." << std::endl;

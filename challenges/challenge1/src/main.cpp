@@ -1,8 +1,15 @@
+/**
+ * @file main.cpp
+ * @brief Main program.
+ */
+
+
 #include <iostream>
 #include <cmath>
 #include "main.hpp"
 #include "json_parser.hpp"
 #include "search_min.hpp"
+
 
 int main() {
 

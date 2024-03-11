@@ -1,9 +1,16 @@
+/**
+ * @file json_parser.cpp
+ * @brief Implementation of extracting and printing functions for a JSON file.
+ */
+
+
 #include <iostream>
 #include <fstream>
 #include "json_parser.hpp"
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
+
 
 void readParametersFromJson(Parameters& params, const std::string& filename) {
     std::ifstream file(filename);
@@ -22,6 +29,7 @@ void readParametersFromJson(Parameters& params, const std::string& filename) {
         std::cerr << "Error opening file " << filename << std::endl;
     }
 }
+
 
 void printParametersFromJson(Parameters readParams) {
     std::cout << "Parameters read from JSON file:\n";
