@@ -5,5 +5,5 @@
     "lTol": 1e-6,
     "rTol": 1e-6,
     "initialConditions": [0.0 , 0.0],
-    "methodLearningRate": 0
-}  
+    "methodLearningRate": 2
+}
