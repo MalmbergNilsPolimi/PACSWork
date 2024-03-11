@@ -7,9 +7,9 @@ We consider a function that has a minimum that we want to find. A common method 
 
 ## Main goals :
 We need to :
-- write a function that takes in input two function wrappers that define f, grad(f), initial conditions, tolerances, a(0), maximal number of iterations and all other needed parameters, and returns the computed minimum.
-- Implement the Armijo rule (used for the approximate line search method).
-- Use a git repo, add a README.md file, create a Makefile, comment the code and prepare a test case.
+- write a function that takes in input two function wrappers that define f, grad(f), initial conditions, tolerances, a(0), maximal number of iterations and all other needed parameters, and returns the computed minimum -> done.
+- Implement the Armijo rule (used for the approximate line search method) -> done.
+- Use a git repo, add a README.md file, create a Makefile, comment the code and prepare a test case -> done.
 
 ## Additional goals :
 We can :
@@ -18,4 +18,29 @@ We can :
 - Try to define the function and the derivatives using muParser.
 - Try to implement other scheme as momentum or heavy-ball methods...
 
-## The work done :
+## Structure of the project :
+The starting point is a JSON file called "parameters.json", which contains the parameters used during the computation. The parameters "alpha0" and "mu" are those used in the learning rate calculation (see doc/Challenge23-24-1.pdf). "lTol" and "rTol" refer respectively to the tolerances used when controlling step length and residual. "methodLearningRate" is defined as an integer which can take the values 0, 1 or 2 and refers to the method used to calculate the learning rate (0=exponential decay, 1=inverse decay, 2=line search with Armijo's rule).
+
+
+## Test case :
+We consider the function f(x,y) = x * y + 4 * x^4 + y^2 + 3*x , where (x,y) are real numbers.
+The gradient of f is defined by grad(f)=(y + 16 * x^3 + 3 , x + 2 * y)
+
+By using,
+
+parameters.json
+{
+    "alpha0": 0.2,
+    "mu": 0.2,
+    "maxIter": 1e+5,
+    "lTol": 1e-6,
+    "rTol": 1e-6,
+    "initialConditions": [0.0 , 0.0],
+    "methodLearningRate": 2
+}
+
+We obtain,
+(x, y)~(-0.590551, 0.295272)
+
+To compare, by using wolframalpha (https://www.wolframalpha.com/input?i=minimize+x+*+y+%2B+4+*+x%5E4+%2B+y%5E2+%2B+3+*+x+)
+min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295275)
