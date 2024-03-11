@@ -31,8 +31,11 @@ std::vector<double> prodVectWithCst(const std::vector<double>& vect, const doubl
     return newVect;
 }
 
-double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient) {
+double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, std::vector<double> vectXk) {
     double rate;
+    double alpha{alpha0};
+    double sigma{0.5};
+    static bool errorDisplayed = false;
 
     switch(methodLearningRate) {
         case 0:
@@ -45,13 +48,19 @@ double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, 
             break;
         case 2:
             // Approximate line search with Armijo rule
-            rate = 2;
+            while (functionToMinimize(vectXk) - functionToMinimize(vectorDiff(vectXk, prodVectWithCst(functionGradient(vectXk), alpha))) < sigma*alpha*vectorNorm(functionGradient(vectXk))*vectorNorm(functionGradient(vectXk))) {
+                alpha /= 2;             
+            }
+            rate = alpha;
             break;
         default:
             // Wrong value
-            std::cerr << "Wrong definition of the Learning rate in JSON file. Use of method 0." << std::endl;
+            if (!errorDisplayed) {
+                std::cerr << "Wrong definition of the learning rate in JSON file. Use of method 0." << std::endl;
+                errorDisplayed = true;
+            }
             methodLearningRate = 0;
-            rate = learningRate(alpha0, mu, methodLearningRate, k, functionToMinimize, functionGradient);
+            rate = learningRate(alpha0, mu, methodLearningRate, k, functionToMinimize, functionGradient, vectXk);
     }
     return rate;
 }
@@ -64,13 +73,13 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
     int iter=0;
-    double alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient);
+    double alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient, vectX1);
     std::vector<double> vectX2 = vectorDiff(vectX1, prodVectWithCst(functionGradient(vectX1), alphak));
     ++iter;
 
     while (iter <= readParams.maxIter && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol && vectorNorm(functionGradient(vectX1)) >= readParams.rTol) {
         std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
-        alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient);
+        alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient, vectX1);
         std::vector<double> tmpVect = vectorDiff(vectX1, prodVectWithCst(functionGradient(vectX1), alphak));
         std::copy(std::begin(tmpVect), std::end(tmpVect), std::begin(vectX2));
         ++iter;
