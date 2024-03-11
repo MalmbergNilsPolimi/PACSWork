@@ -45,5 +45,5 @@ void printParametersFromJson(Parameters readParams) {
     }
     std::cout << "]" << std::endl;
     std::cout << "methodLearningRate: " << readParams.methodLearningRate << std::endl;
-    std::cout << "methodGradient" << readParams.methodGradient << "\n" << std;;endl;
+    std::cout << "methodGradient: " << readParams.methodGradient << "\n" << std::endl;
 }
