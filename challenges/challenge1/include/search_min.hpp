@@ -12,21 +12,19 @@
 
 
 using FunctionWrapper = const std::function<double(const std::vector<double>&)>&;
-using FunctionWrapperGradient = const std::function<std::vector<double>(const std::vector<double>&)>&;
+using FunctionWrapperGradient = const std::function<std::vector<double>(FunctionWrapper, const std::vector<double>&, int&)>&;
 
 
 /**
  * @brief Compute the learning rate at a step k using several methods.
  * 
- * @param alpha0 Initial value for the learning rate.
- * @param mu Decreasing coefficient.
- * @param methodLearningRate Interger use to choose the method.
- * @param k Number of iteration.
  * @param functionToMinimize Multivariate function to minimise.
  * @param functionGradient Gradient of the multivariate function.
+ * @param readParams Parameters extracted from the JSON file.
  * @param vectXk Vector containing the minimum point at step k.
+ * @param k Number of iteration.
  */
-double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, std::vector<double> vectXk);
+double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, int& k);
 
 /**
  * @brief Compute the minimum of a multivariate function.

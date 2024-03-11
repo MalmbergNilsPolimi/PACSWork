@@ -10,9 +10,12 @@
 #include "vect_operations.hpp"
 
 
-double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, std::vector<double> vectXk) {
+double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, int& k) {
     double rate;
-    double alpha{alpha0};
+    double alpha0{readParams.alpha0};
+    double mu{readParams.mu};
+    int methodLearningRate{readParams.methodLearningRate};
+    int methodGradient{readParams.methodGradient};
     double sigma{0.5};
     static bool errorDisplayed = false;
 
@@ -27,10 +30,10 @@ double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, 
             break;
         case 2:
             // Approximate line search with Armijo rule
-            while (functionToMinimize(vectXk) - functionToMinimize(vectorDiff(vectXk, prodVectWithCst(functionGradient(vectXk), alpha))) < sigma*alpha*vectorNorm(functionGradient(vectXk))*vectorNorm(functionGradient(vectXk))) {
-                alpha /= 2;             
+            while (functionToMinimize(vectXk) - functionToMinimize(vectorDiff(vectXk, prodVectWithCst(functionGradient(functionToMinimize ,vectXk, methodGradient), alpha0))) < sigma*alpha0*vectorNorm(functionGradient(functionToMinimize ,vectXk, methodGradient))*vectorNorm(functionGradient(functionToMinimize ,vectXk, methodGradient))) {
+                alpha0 /= 2;             
             }
-            rate = alpha;
+            rate = alpha0;
             break;
         default:
             // Wrong value
@@ -38,8 +41,9 @@ double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, 
                 std::cerr << "Wrong definition of the learning rate in JSON file. Use of method 0." << std::endl;
                 errorDisplayed = true;
             }
-            methodLearningRate = 0;
-            rate = learningRate(alpha0, mu, methodLearningRate, k, functionToMinimize, functionGradient, vectXk);
+            readParams.methodLearningRate = 0;
+            rate = learningRate(functionToMinimize, functionGradient, readParams, vectXk, k);
+            break;
     }
     return rate;
 }
@@ -53,14 +57,14 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
     int iter=0;
-    double alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient, vectX1);
-    std::vector<double> vectX2 = vectorDiff(vectX1, prodVectWithCst(functionGradient(vectX1), alphak));
+    double alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
+    std::vector<double> vectX2 = vectorDiff(vectX1, prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient), alphak));
     ++iter;
 
-    while (iter <= readParams.maxIter && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol && vectorNorm(functionGradient(vectX1)) >= readParams.rTol) {
+    while (iter <= readParams.maxIter && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol && vectorNorm(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient)) >= readParams.rTol) {
         std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
-        alphak = learningRate(readParams.alpha0, readParams.mu, readParams.methodLearningRate, iter, functionToMinimize, functionGradient, vectX1);
-        std::vector<double> tmpVect = vectorDiff(vectX1, prodVectWithCst(functionGradient(vectX1), alphak));
+        alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
+        std::vector<double> tmpVect = vectorDiff(vectX1, prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient), alphak));
         std::copy(std::begin(tmpVect), std::end(tmpVect), std::begin(vectX2));
         ++iter;
     }
