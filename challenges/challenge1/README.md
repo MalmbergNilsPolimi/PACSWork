@@ -24,23 +24,13 @@ The starting point is a JSON file called "parameters.json", which contains the p
 
 ## Test case :
 We consider the function f(x,y) = x * y + 4 * x^4 + y^2 + 3*x , where (x,y) are real numbers.
+
 The gradient of f is defined by grad(f)=(y + 16 * x^3 + 3 , x + 2 * y)
 
-By using,
+With alpha0=0.2 ; mu=0.2 ; maxIter=1e+5 ; lTol=1e-6 ; rTol=1e-6 ; initialConditions=[0.0 , 0.0] ; methodLearningRate=2.
 
-parameters.json
-{
-    "alpha0": 0.2,
-    "mu": 0.2,
-    "maxIter": 1e+5,
-    "lTol": 1e-6,
-    "rTol": 1e-6,
-    "initialConditions": [0.0 , 0.0],
-    "methodLearningRate": 2
-}
+We obtain, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295272)
 
-We obtain,
-(x, y)~(-0.590551, 0.295272)
+To compare, by using wolframalpha, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295275)
 
-To compare, by using wolframalpha (https://www.wolframalpha.com/input?i=minimize+x+*+y+%2B+4+*+x%5E4+%2B+y%5E2+%2B+3+*+x+)
-min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295275)
+(https://www.wolframalpha.com/input?i=minimize+x+*+y+%2B+4+*+x%5E4+%2B+y%5E2+%2B+3+*+x+)
