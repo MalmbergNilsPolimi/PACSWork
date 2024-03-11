@@ -29,7 +29,7 @@ int main() {
     };
 
     std::vector<double> minPoint = searchMinimum(functionToMinimize, functionGradientUserDefine, readParams);
-
+    
     std::cout << "Minimum coordinates : [ ";
     for (size_t i = 0; i < minPoint.size(); ++i) {
         std::cout << minPoint[i] << " ";

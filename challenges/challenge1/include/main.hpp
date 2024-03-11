@@ -21,6 +21,7 @@ struct Parameters
     double rTol; /**< Tolerance based on the control of the residuals. */
     std::vector<double> initialConditions; /**< Starting point. */
     int methodLearningRate; /**< Method used for the learning rate computation. */
+    int methodGradient; /**< Method used for the gradient computation. */
 };
 
 
