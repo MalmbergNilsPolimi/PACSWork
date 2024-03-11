@@ -13,8 +13,8 @@ We need to :
 
 ## Additional goals :
 We can :
-- Give the user the choice of the method use and so add other methods to the code (don't use loops that are inefficient but a function template with an enumerator as template parameter and use if constepr).
-- Write a function that computes the gradient by finite differences and let the user choose between this one instead of the exact gradient.
+- Give the user the choice of the method use and so add other methods to the code -> done.
+- Write a function that computes the gradient by finite differences and let the user choose between this one instead of the exact gradient -> done.
 - Try to define the function and the derivatives using muParser.
 - Try to implement other scheme as momentum or heavy-ball methods...
 
