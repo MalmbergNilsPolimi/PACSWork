@@ -20,7 +20,7 @@ struct Parameters
     double lTol; /**< Tolerance based on the control of the step length. */
     double rTol; /**< Tolerance based on the control of the residuals. */
     std::vector<double> initialConditions; /**< Starting point. */
-    int methodLearningRate; : /**< Method used for the learning rate computation. */
+    int methodLearningRate; /**< Method used for the learning rate computation. */
 };
 
 
