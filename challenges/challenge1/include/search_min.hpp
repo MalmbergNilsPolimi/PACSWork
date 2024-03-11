@@ -10,7 +10,7 @@ using FunctionWrapperGradient = const std::function<std::vector<double>(const st
 double vectorNorm(const std::vector<double>& vect);
 std::vector<double> vectorDiff(const std::vector<double>& vect1, const std::vector<double>& vect2);
 std::vector<double> prodVectWithCst(const std::vector<double>& vect, const double& constant);
-double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient);
+double learningRate(double& alpha0, double& mu, int methodLearningRate, int& k, FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, std::vector<double> vectXk);
 std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters& readParams);
 
 #endif // SEARCH_MIN_HPP
