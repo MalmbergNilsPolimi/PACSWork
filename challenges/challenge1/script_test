@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Delete res_script_test.res if it exists
+if [ -f res_script_test.res ]; then
+    rm res_script_test.res
+fi
+
+# Create a copy of parameters.json
+cp parameters.json parameters.json.backup
+
+# all possible values
+declare -a learningRates=("0" "1" "2")
+
+# all possible values
+declare -a gradients=("0" "1")
+
+# for all configurations possible
+for learningRate in "${learningRates[@]}"
+do
+    for gradient in "${gradients[@]}"
+    do
+
+        cp parameters.json.backup parameters.json
+
+        # modify parameters.json
+        sed -i "s/\"methodLearningRate\": [0-9]*/\"methodLearningRate\": ${learningRate}/g" parameters.json
+        sed -i "s/\"methodGradient\": [0-9]*/\"methodGradient\": ${gradient}/g" parameters.json
+
+        # Execution and take the last two lines
+        make
+        result=$(./bin/main | tail -n 2)
+
+        # Print the results in res_script_test.res
+        echo "methodLearningRate = ${learningRate}, methodGradient = ${gradient}" >> res_script_test.res
+        echo "${result}" >> res_script_test.res
+        echo "" >> res_script_test.res
+    done
+done
+
+# Remove the copy of parameters.json
+rm parameters.json.backup
