@@ -36,3 +36,6 @@ We obtain, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.29527
 To compare, by using wolframalpha, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295275)
 
 (https://www.wolframalpha.com/input?i=minimize+x+*+y+%2B+4+*+x%5E4+%2B+y%5E2+%2B+3+*+x+)
+
+## script_test file :
+This file was created to simplify the test of all configurations (methodLearningRate, methodGradient) to check faster the results. The results are stored in a file called res_script_test.res
