@@ -17,8 +17,9 @@ int main() {
     readParametersFromJson(readParams, "parameters.json");
     printParametersFromJson(readParams);
 
-    auto functionToMinimize = [](const std::vector<double>& x) { // & is used to give a reference, to avoid function to copy x
-        
+    auto functionToMinimize = [](const std::vector<double>& x) {
+        // The user define here the multivariate function
+
         //return x[0]*x[0]*x[0]*x[0] - x[0]; // min(f)=-0.47 in (0.63) 
         //return (x[0]*x[1] - 1)*(x[0]*x[1] - 1) + (x[0] + x[1])*(x[0] + x[1]); // min(f)=1 in (0 , 0)
         return x[0] * x[1] + 4 * std::pow(x[0],4) + x[1] * x[1] + 3 * x[0]; // min(f)=-1.37 in (-0.59 , 0.29) 
@@ -33,7 +34,7 @@ int main() {
         {
         
         case 0:
-            // The user define the gradient
+            // The user can define here the gradient
             grad[0] = x[1] + 16 * std::pow(x[0],3) + 3;
             grad[1] = x[0] + 2 * x[1];
              break;
@@ -45,7 +46,7 @@ int main() {
                     errorDisplayed = true;
                 }
             }
-            // Use of finite differenc method
+            // Use of finite difference method
             for (size_t i = 0; i < x.size(); ++i) {
             
                 std::vector<double> vectPlusH = x;
