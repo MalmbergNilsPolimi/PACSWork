@@ -38,3 +38,18 @@ std::vector<double> prodVectWithCst(const std::vector<double>& vect, const doubl
         }
     return newVect;
 }
+
+
+std::vector<double> vectorSum(const std::vector<double>& vect1, const std::vector<double>& vect2) {
+    std::vector<double> newVect(vect1.size());
+
+    if (std::abs(static_cast<int>(vect1.size()) - static_cast<int>(vect2.size())) < 1e-6) {
+        for (size_t i = 0; i < vect1.size(); ++i) {
+            newVect[i] = vect1[i] + vect2[i];
+        }
+    } else {
+        std::cerr << "Error operation on two vectors with different dimensions" << std::endl;
+    }
+
+    return newVect;
+}

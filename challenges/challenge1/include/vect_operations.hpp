@@ -33,4 +33,13 @@ std::vector<double> vectorDiff(const std::vector<double>& vect1, const std::vect
  */
 std::vector<double> prodVectWithCst(const std::vector<double>& vect, const double& constant);
 
+/**
+ * @brief Compute the term by term of two vectors.
+ * 
+ * @param vect1 Vector use for the calculations.
+ * @param vect2 Vector use for the calculations.
+ */
+std::vector<double> vectorSum(const std::vector<double>& vect1, const std::vector<double>& vect2);
+
+
 #endif // VECT_OP_HPP
