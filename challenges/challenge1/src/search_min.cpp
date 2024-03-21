@@ -140,7 +140,6 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
             vectX2 = vectorSum(vectX1, prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient), -alphak));
             vectY = vectorSum(vectX2, prodVectWithCst(vectorSum(vectX2, prodVectWithCst(vectX1, -1.)) , eta));
         }
-
         break;
 
     default:
