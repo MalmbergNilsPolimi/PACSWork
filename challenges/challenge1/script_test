@@ -14,26 +14,32 @@ declare -a learningRates=("0" "1" "2")
 # all possible values
 declare -a gradients=("0" "1")
 
+# all possible values
+declare -a minimization=("0" "1" "2")
+
 # for all configurations possible
 for learningRate in "${learningRates[@]}"
 do
     for gradient in "${gradients[@]}"
     do
+        for minimization in "${minimization[@]}"
+        do
+            cp parameters.json.backup parameters.json
 
-        cp parameters.json.backup parameters.json
+            # modify parameters.json
+            sed -i "s/\"methodLearningRate\": [0-9]*/\"methodLearningRate\": ${learningRate}/g" parameters.json
+            sed -i "s/\"methodGradient\": [0-9]*/\"methodGradient\": ${gradient}/g" parameters.json
+            sed -i "s/\"methodMinimization\": [0-9]*/\"methodMinimization\": ${minimization}/g" parameters.json
 
-        # modify parameters.json
-        sed -i "s/\"methodLearningRate\": [0-9]*/\"methodLearningRate\": ${learningRate}/g" parameters.json
-        sed -i "s/\"methodGradient\": [0-9]*/\"methodGradient\": ${gradient}/g" parameters.json
+            # Execution and take the last two lines
+            make
+            result=$(./bin/main | tail -n 2)
 
-        # Execution and take the last two lines
-        make
-        result=$(./bin/main | tail -n 2)
-
-        # Print the results in res_script_test.res
-        echo "methodLearningRate = ${learningRate}, methodGradient = ${gradient}" >> res_script_test.res
-        echo "${result}" >> res_script_test.res
-        echo "" >> res_script_test.res
+            # Print the results in res_script_test.res
+            echo "methodLearningRate = ${learningRate}, methodGradient = ${gradient}, methodMinimization = ${minimization}" >> res_script_test.res
+            echo "${result}" >> res_script_test.res
+            echo "" >> res_script_test.res
+        done   
     done
 done
 
