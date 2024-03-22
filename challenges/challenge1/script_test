@@ -43,5 +43,7 @@ do
     done
 done
 
+clear
+
 # Remove the copy of parameters.json
 rm parameters.json.backup
