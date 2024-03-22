@@ -14,6 +14,7 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
                     std::vector<double> vectXk, unsigned int& k) {
     
     static bool errorDisplayed{false};
+    static bool errorDisplayed2{false};
 
     unsigned int methodLearningRate{readParams.methodLearningRate};
     unsigned int methodGradient{readParams.methodGradient};
@@ -25,6 +26,14 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
     
     std::vector<double> gradient(readParams.numVar);
 
+    if ((readParams.methodMinimization==1 || readParams.methodMinimization==2) && readParams.methodLearningRate==2) {
+        if (!errorDisplayed2) {
+            std::cerr << "You can't use the Armijo rule with the heavy-ball or Nesterov method. Use of exponential decay." << std::endl;
+            readParams.methodLearningRate=0;
+            errorDisplayed2=true;
+        }
+    }
+    
     switch(methodLearningRate) {
         case 0:
             // Exponential decay
@@ -38,12 +47,6 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
 
         case 2:
             // Approximate line search with Armijo rule
-            if (readParams.methodMinimization==1) {
-                std::cerr << "You can't use the Armijo rule with the heavy-ball method. Use of exponential decay." << std::endl;
-                readParams.methodMinimization=0;
-                learningRate(functionToMinimize, functionGradient, readParams, vectXk, k);
-                break;
-            }
             gradient = functionGradient(functionToMinimize ,vectXk, methodGradient);
             while (functionToMinimize(vectXk) - functionToMinimize(vectorDiff(vectXk, prodVectWithCst(gradient, alpha0))) < sigma*alpha0*vectorNorm(gradient)*vectorNorm(gradient)) {
                 alpha0 /= 2;             
