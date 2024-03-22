@@ -14,6 +14,7 @@
  */
 struct Parameters
 {
+    unsigned int numVar;
     double alpha0; /**< Initialisation of the learning rate. */
     double mu; /**< Decreasing coefficient. */
     unsigned int maxIter; /**< Maximum number of iteration. */

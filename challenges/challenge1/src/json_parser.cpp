@@ -27,6 +27,7 @@ void readParametersFromJson(Parameters& params, const std::string& filename) {
         params.methodGradient = j["methodGradient"].get<unsigned int>();
         params.methodMinimization = j["methodMinimization"].get<unsigned int>();
         file.close();
+        params.numVar = (params.initialConditions).size();
     } else {
         std::cerr << "Error opening file " << filename << std::endl;
     }

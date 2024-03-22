@@ -17,8 +17,8 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
     unsigned int methodLearningRate{readParams.methodLearningRate};
     unsigned int methodGradient{readParams.methodGradient};
     double sigma{0.5};
-    static bool errorDisplayed = false;
-    std::vector<double> gradient((readParams.initialConditions).size());
+    static bool errorDisplayed{false};
+    std::vector<double> gradient(readParams.numVar);
 
     switch(methodLearningRate) {
         case 0:
@@ -61,7 +61,7 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     static bool errorDisplayed = false;
     std::cout << "Searching for the minimum..." << std::endl;
 
-    std::vector<double> vectX1((readParams.initialConditions).size());
+    std::vector<double> vectX1(readParams.numVar);
     
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
