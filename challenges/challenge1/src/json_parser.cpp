@@ -19,13 +19,13 @@ void readParametersFromJson(Parameters& params, const std::string& filename) {
         file >> j;
         params.alpha0 = j["alpha0"].get<double>();
         params.mu = j["mu"].get<double>();
-        params.maxIter = j["maxIter"].get<int>();
+        params.maxIter = j["maxIter"].get<unsigned int>();
         params.lTol = j["lTol"].get<double>();
         params.rTol = j["rTol"].get<double>();
         params.initialConditions = j["initialConditions"].get<std::vector<double>>();
-        params.methodLearningRate = j["methodLearningRate"].get<int>();
-        params.methodGradient = j["methodGradient"].get<int>();
-        params.methodMinimization = j["methodMinimization"].get<int>();
+        params.methodLearningRate = j["methodLearningRate"].get<unsigned int>();
+        params.methodGradient = j["methodGradient"].get<unsigned int>();
+        params.methodMinimization = j["methodMinimization"].get<unsigned int>();
         file.close();
     } else {
         std::cerr << "Error opening file " << filename << std::endl;

@@ -25,7 +25,7 @@ int main() {
         return x[0] * x[1] + 4 * std::pow(x[0],4) + x[1] * x[1] + 3 * x[0]; // min(f)=-1.37 in (-0.59 , 0.29) 
     };
 
-    auto functionGradient = [](FunctionWrapper function, const std::vector<double>& x, int& methodGradient) -> std::vector<double> {
+    auto functionGradient = [](FunctionWrapper function, const std::vector<double>& x, unsigned int& methodGradient) -> std::vector<double> {
         std::vector<double> grad(x.size());
         static bool errorDisplayed = false;
         double h = 1e-6;

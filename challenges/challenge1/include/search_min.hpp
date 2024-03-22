@@ -12,7 +12,7 @@
 
 
 using FunctionWrapper = const std::function<double(const std::vector<double>&)>&;
-using FunctionWrapperGradient = const std::function<std::vector<double>(FunctionWrapper, const std::vector<double>&, int&)>&;
+using FunctionWrapperGradient = const std::function<std::vector<double>(FunctionWrapper, const std::vector<double>&, unsigned int&)>&;
 
 
 /**
@@ -24,7 +24,7 @@ using FunctionWrapperGradient = const std::function<std::vector<double>(Function
  * @param vectXk Vector containing the minimum point at step k.
  * @param k Number of iteration.
  */
-double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, int& k);
+double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, unsigned int& k);
 
 /**
  * @brief Compute the minimum of a multivariate function.

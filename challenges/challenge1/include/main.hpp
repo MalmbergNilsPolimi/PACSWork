@@ -16,13 +16,13 @@ struct Parameters
 {
     double alpha0; /**< Initialisation of the learning rate. */
     double mu; /**< Decreasing coefficient. */
-    int maxIter; /**< Maximum number of iteration. */
+    unsigned int maxIter; /**< Maximum number of iteration. */
     double lTol; /**< Tolerance based on the control of the step length. */
     double rTol; /**< Tolerance based on the control of the residuals. */
     std::vector<double> initialConditions; /**< Starting point. */
-    int methodLearningRate; /**< Method used for the learning rate computation. */
-    int methodGradient; /**< Method used for the gradient computation. */
-    int methodMinimization; /**< Method used to minimize the function. */
+    unsigned int methodLearningRate; /**< Method used for the learning rate computation. */
+    unsigned int methodGradient; /**< Method used for the gradient computation. */
+    unsigned int methodMinimization; /**< Method used to minimize the function. */
 };
 
 

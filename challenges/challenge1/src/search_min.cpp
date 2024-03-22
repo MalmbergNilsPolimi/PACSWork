@@ -10,12 +10,12 @@
 #include "vect_operations.hpp"
 
 
-double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, int& k) {
+double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, unsigned int& k) {
     double rate;
     double alpha0{readParams.alpha0};
     double mu{readParams.mu};
-    int methodLearningRate{readParams.methodLearningRate};
-    int methodGradient{readParams.methodGradient};
+    unsigned int methodLearningRate{readParams.methodLearningRate};
+    unsigned int methodGradient{readParams.methodGradient};
     double sigma{0.5};
     static bool errorDisplayed = false;
     std::vector<double> gradient((readParams.initialConditions).size());
@@ -65,7 +65,7 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
-    int iter=0;
+    unsigned int iter=0;
     double alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
     
     std::vector<double> vectX2 = vectorDiff(vectX1, prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient), alphak));
