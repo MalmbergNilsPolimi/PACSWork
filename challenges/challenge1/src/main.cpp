@@ -20,10 +20,7 @@ int main() {
 
     auto functionToMinimize = [](const std::vector<double>& x) -> double {
         // The user define here the multivariate function
-
-        //return x[0]*x[0]*x[0]*x[0] - x[0]; // min(f)=-0.47 in (0.63) 
-        //return (x[0]*x[1] - 1)*(x[0]*x[1] - 1) + (x[0] + x[1])*(x[0] + x[1]); // min(f)=1 in (0 , 0)
-        return x[0] * x[1] + 4 * std::pow(x[0],4) + x[1] * x[1] + 3 * x[0]; // min(f)=-1.37 in (-0.59 , 0.29) 
+        return x[0] * x[1] + 4 * std::pow(x[0],4) + x[1] * x[1] + 3 * x[0];
     };
 
     auto functionGradient = [](FunctionWrapper function, const std::vector<double>& x, unsigned int& methodGradient) -> std::vector<double> {
