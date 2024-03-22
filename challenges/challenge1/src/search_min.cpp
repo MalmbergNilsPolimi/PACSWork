@@ -10,14 +10,19 @@
 #include "vect_operations.hpp"
 
 
-double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams, std::vector<double> vectXk, unsigned int& k) {
-    double rate;
-    double alpha0{readParams.alpha0};
-    double mu{readParams.mu};
+double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters readParams,
+                    std::vector<double> vectXk, unsigned int& k) {
+    
+    static bool errorDisplayed{false};
+
     unsigned int methodLearningRate{readParams.methodLearningRate};
     unsigned int methodGradient{readParams.methodGradient};
+
+    double rate;
     double sigma{0.5};
-    static bool errorDisplayed{false};
+    double alpha0{readParams.alpha0};
+    double mu{readParams.mu};
+    
     std::vector<double> gradient(readParams.numVar);
 
     switch(methodLearningRate) {
@@ -25,10 +30,12 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
             // Exponential decay
             rate = alpha0 * std::exp(- mu * k);
             break;
+
         case 1:
             // Inverse decay
             rate = alpha0 / (1 + mu * k);
             break;
+
         case 2:
             // Approximate line search with Armijo rule
             if (readParams.methodMinimization==1) {
@@ -43,6 +50,7 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
             }
             rate = alpha0;
             break;
+            
         default:
             // Wrong value
             if (!errorDisplayed) {
@@ -58,16 +66,14 @@ double learningRate(FunctionWrapper functionToMinimize, FunctionWrapperGradient 
 
 
 std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWrapperGradient functionGradient, Parameters& readParams) {
-    static bool errorDisplayed = false;
     std::cout << "Searching for the minimum..." << std::endl;
 
-    std::vector<double> vectX1(readParams.numVar);
-    
+    unsigned int iter=0;
+
+    std::vector<double> vectX1(readParams.numVar);   
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
-    unsigned int iter=0;
-    double alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
-    
+    double alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);    
     std::vector<double> vectX2 = vectorDiff(vectX1, prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient), alphak));
     
     switch (readParams.methodMinimization)
@@ -75,7 +81,10 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     case 0:
         //Gradient method
         ++iter;
-        while (iter <= readParams.maxIter && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol && vectorNorm(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient)) >= readParams.rTol) {
+        while (iter <= readParams.maxIter 
+                    && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol 
+                    && vectorNorm(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient)) >= readParams.rTol)
+        {
             std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
             alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
             std::vector<double> tmpVect = vectorDiff(vectX1, prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient), alphak));

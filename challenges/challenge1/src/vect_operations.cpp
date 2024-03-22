@@ -53,3 +53,22 @@ std::vector<double> vectorSum(const std::vector<double>& vect1, const std::vecto
 
     return newVect;
 }
+
+
+std::vector<double> FDgradient(FunctionWrapper function, const std::vector<double>& vect,  double& step) {
+
+    double h = 1e-6;
+    std::vector<double> grad(vect.size());
+
+    for (size_t i = 0; i < vect.size(); ++i) {
+        std::vector<double> vectPlusH =vect;
+        std::vector<double> vectMinusH = vect;
+
+        vectPlusH[i] += step;
+        vectMinusH[i] -= step; 
+
+        grad[i] = (function(vectPlusH) - function(vectMinusH)) / (2 * step);
+    }
+    return grad;
+}
+

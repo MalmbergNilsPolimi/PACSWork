@@ -8,7 +8,7 @@
 #define VECT_OP_HPP
 
 #include <vector>
-
+#include "search_min.hpp"
 
 /**
  * @brief Compute the norm of a vector.
@@ -40,6 +40,15 @@ std::vector<double> prodVectWithCst(const std::vector<double>& vect, const doubl
  * @param vect2 Vector use for the calculations.
  */
 std::vector<double> vectorSum(const std::vector<double>& vect1, const std::vector<double>& vect2);
+
+/**
+ * @brief Compute the gradient of function in vect using a finite difference method.
+ * 
+ * @param function Function for which the gradient is computed.
+ * @param vect Vector use for the evaluation.
+ * @param step Step of discretization.
+ */
+std::vector<double> FDgradient(FunctionWrapper function, const std::vector<double>& vect,  double& step);
 
 
 #endif // VECT_OP_HPP
