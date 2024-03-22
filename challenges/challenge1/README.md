@@ -20,6 +20,7 @@ We can :
 
 ## Structure of the parameters file :
 The starting point is a JSON file called "parameters.json", which contains the parameters used during the computation. The parameters "alpha0" and "mu" are those used in the learning rate calculation (see doc/Challenge23-24-1.pdf). "lTol" and "rTol" refer respectively to the tolerances used when controlling step length and residual. "methodLearningRate" is defined as an integer which can take the values 0, 1 or 2 and refers to the method used to calculate the learning rate (0=exponential decay, 1=inverse decay, 2=line search with Armijo's rule). "methodGradient" is used to choose a method to compute the gradient (0= the user define the gradient in the main, 1= the gradient is compute using finite differences). "methodMinimization" is used to choose the method of minimization (0=gradient method, 1=heavy-ball/momentum method, 2=Nesterov method).
+Remark: you can't use heavy-ball or Nesterov methods combined with the Armijo's rule.
 
 ## Definition of the multivariate function :
 To define the function to minimize, the user need to implement it in the main.cpp file under the name "functionToMinimize". If the user want to use his definition of the gradient, case 0 of "functionGradient" need to be adapted also (and methodGradient need to be equal to 0 in parameters.json). 
@@ -29,11 +30,7 @@ We consider the function f(x,y) = x * y + 4 * x^4 + y^2 + 3*x , where (x,y) are 
 
 The gradient of f is defined by grad(f)=(y + 16 * x^3 + 3 , x + 2 * y)
 
-With alpha0=0.2 ; mu=0.2 ; maxIter=1e+5 ; lTol=1e-6 ; rTol=1e-6 ; initialConditions=[0.0 , 0.0] ; methodLearningRate=2.
-
-We obtain, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295272)
-
-To compare, by using wolframalpha, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295275)
+By using wolframalpha, min{x y + 4 x^4 + y^2 + 3 x} ~ -1.37233 at (x, y)~(-0.590551, 0.295275)
 
 (https://www.wolframalpha.com/input?i=minimize+x+*+y+%2B+4+*+x%5E4+%2B+y%5E2+%2B+3+*+x+)
 
