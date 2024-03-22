@@ -40,7 +40,7 @@ int main() {
              break;
         
         default:
-            static bool errorDisplayed = false;
+            static bool errorDisplayed{false};
             if (methodGradient != 1) {
                 if (!errorDisplayed) {
                     std::cerr << "Wrong definition of the gradient method in JSON file. Use of method 1." << std::endl;
