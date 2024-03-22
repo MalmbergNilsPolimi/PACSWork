@@ -79,6 +79,7 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     std::vector<double> vectd1{prodVectWithCst(functionGradient(functionToMinimize, vectX1, readParams.methodGradient), -alphak)};
     std::vector<double> vectd2(readParams.numVar);
     std::vector<double> vectY(readParams.numVar);
+    std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectY));
 
     double eta{0.9};
 
@@ -124,12 +125,35 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
             ++iter;
         }
         break;
-    /*
+    
     case 2:
-        //Heavy-ball/momentum method
+        //Nesterov
+        vectX1 = vectorSum(vectY, vectd1);
+        std::copy(std::begin(vectY), std::end(vectY), std::begin(vectd1));
+        ++iter;
+
+        while (iter <= readParams.maxIter 
+                    && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol 
+                    && vectorNorm(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient)) >= readParams.rTol)
+        {
+            
+            alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
+            
+            if (alphak < 1) {
+                eta = 1-alphak;
+            } else {
+                eta = 0.9;
+            }
+
+            vectY = vectorSum(vectX1, prodVectWithCst(vectorSum(vectX1, prodVectWithCst(vectd1, -1.)), eta)); 
+            vectX2 = vectorSum(vectY, prodVectWithCst(functionGradient(functionToMinimize, vectY, readParams.methodGradient),-alphak));
+
+            std::copy(std::begin(vectX1), std::end(vectX1), std::begin(vectd1));
+            std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
+            ++iter;
+        }
         break;
-    */
-   
+
     default:
         std::cerr << "Wrong definition of the minimization method. Use of method 0." << std::endl;
         readParams.methodMinimization = 0;
