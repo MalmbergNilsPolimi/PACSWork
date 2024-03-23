@@ -7,5 +7,5 @@
     "initialConditions": [0.0 , 0.0],
     "methodLearningRate": 2,
     "methodGradient": 1,
-    "methodMinimization": 2
+    "methodMinimization": 0
 }
