@@ -118,7 +118,7 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
         break;
 
     case 1:
-        //Heavy-ball/momentum method
+        //Heavy-ball, momentum method -> not working
         vectd1 = prodVectWithCst(functionGradient(functionToMinimize, vectX1, readParams.methodGradient), -alphak);
         vectX2 = vectorSum(vectX1, vectd1);
         ++iter;
@@ -142,7 +142,7 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
         break;
 
     case 2:
-        //Nesterov
+        //Nesterov -> not working
         iter=1;
         alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
         vectX2 = prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient),-alphak);
