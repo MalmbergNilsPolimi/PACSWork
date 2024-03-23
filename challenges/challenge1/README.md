@@ -16,10 +16,10 @@ We can :
 - Give the user the choice of the method use and so add other methods to the code -> done.
 - Write a function that computes the gradient by finite differences and let the user choose between this one instead of the exact gradient -> done.
 - Try to define the function and the derivatives using muParser.
-- Try to implement other scheme as heavy-ball, Nesterov methods... -> in construction for Nesterov and Heavy-ball
+- Try to implement other scheme as heavy-ball, Nesterov methods... -> I try for Nesterov and Heavy-ball but unfortunately, it doesn't work.
 
 ## Structure of the parameters file :
-The starting point is a JSON file called "parameters.json", which contains the parameters used during the computation. The parameters "alpha0" and "mu" are those used in the learning rate calculation (see doc/Challenge23-24-1.pdf). "lTol" and "rTol" refer respectively to the tolerances used when controlling step length and residual. "methodLearningRate" is defined as an integer which can take the values 0, 1 or 2 and refers to the method used to calculate the learning rate (0=exponential decay, 1=inverse decay, 2=line search with Armijo's rule). "methodGradient" is used to choose a method to compute the gradient (0= the user define the gradient in the main, 1= the gradient is compute using finite differences). "methodMinimization" is used to choose the method of minimization (0=gradient method, 1=heavy-ball/momentum method, 2=Nesterov method).
+The starting point is a JSON file called "parameters.json", which contains the parameters used during the computation. The parameters "alpha0" and "mu" are those used in the learning rate calculation (see doc/Challenge23-24-1.pdf). "lTol" and "rTol" refer respectively to the tolerances used when controlling step length and residual. "methodLearningRate" is defined as an integer which can take the values 0, 1 or 2 and refers to the method used to calculate the learning rate (0=exponential decay, 1=inverse decay, 2=line search with Armijo's rule). "methodGradient" is used to choose a method to compute the gradient (0= the user define the gradient in the main, 1= the gradient is compute using finite differences). "methodMinimization" is used to choose the method of minimization (0=gradient method, 1=heavy-ball/momentum method, 2=Nesterov method !! method 1 and 2 are not working !!).
 Remark: you can't use heavy-ball or Nesterov methods combined with the Armijo's rule.
 
 ## Definition of the multivariate function :
