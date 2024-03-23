@@ -23,7 +23,7 @@ The starting point is a JSON file called "parameters.json", which contains the p
 Remark: you can't use heavy-ball or Nesterov methods combined with the Armijo's rule.
 
 ## Definition of the multivariate function :
-To define the function to minimize, the user need to implement it in the main.cpp file under the name "functionToMinimize". If the user want to use his definition of the gradient, case 0 of "functionGradient" need to be adapted also (and methodGradient need to be equal to 0 in parameters.json). 
+To define the function to minimize, the user need to implement it in the main.cpp file under the name "functionToMinimize". If the user want to use his definition of the gradient, "functionGradient" need to be adapted also (and methodGradient need to be equal to 0 in parameters.json). 
 
 ## Test case :
 We consider the function f(x,y) = x * y + 4 * x^4 + y^2 + 3*x , where (x,y) are real numbers.
