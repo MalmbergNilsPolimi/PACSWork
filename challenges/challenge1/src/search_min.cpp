@@ -74,12 +74,13 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
     unsigned int iter{0};
 
     std::vector<double> vectX1(readParams.numVar);
-    std::vector<double> vectX2(readParams.numVar);    
+    std::vector<double> vectX2(readParams.numVar);   
+    std::vector<double> vectX3(readParams.numVar);    
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectX1));
 
     double alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
     
-    std::vector<double> vectd1{prodVectWithCst(functionGradient(functionToMinimize, vectX1, readParams.methodGradient), -alphak)};
+    std::vector<double> vectd1(readParams.numVar);
     std::vector<double> vectd2(readParams.numVar);
     std::vector<double> vectY(readParams.numVar);
     std::copy(std::begin(readParams.initialConditions), std::end(readParams.initialConditions), std::begin(vectY));
@@ -95,6 +96,8 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
         
         return eta;
     };
+
+    bool flag{true};
 
     switch (readParams.methodMinimization)
     {
@@ -113,49 +116,49 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
             ++iter;
         }
         break;
-    
+
     case 1:
         //Heavy-ball/momentum method
+        vectd1 = prodVectWithCst(functionGradient(functionToMinimize, vectX1, readParams.methodGradient), -alphak);
         vectX2 = vectorSum(vectX1, vectd1);
         ++iter;
-        while (iter <= readParams.maxIter 
-                    && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol 
+        while (iter <= readParams.maxIter
+                    && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol
                     && vectorNorm(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient)) >= readParams.rTol)
         {
-            vectX2 = vectorSum(vectX1, vectd1);
             alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX2, iter);
-            
+
             eta = etaCalc(alphak);
-            
+
             vectd2 = vectorSum(prodVectWithCst(vectd1, eta), prodVectWithCst(functionGradient(functionToMinimize ,vectX2, readParams.methodGradient) , -alphak));
 
+            vectX1 = vectorSum(vectX2, vectd2);
+
             std::copy(std::begin(vectd2), std::end(vectd2), std::begin(vectd1));
-            std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
+            std::copy(std::begin(vectX1), std::end(vectX1), std::begin(vectX2));
             ++iter;
         }
+        std::cout << "Number iter: " << iter << std::endl;
         break;
-    
+
     case 2:
         //Nesterov
-        vectX1 = vectorSum(vectY, vectd1);
-        std::copy(std::begin(vectY), std::end(vectY), std::begin(vectd1));
-        ++iter;
+        iter=1;
+        alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
+        vectX2 = prodVectWithCst(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient),-alphak);
 
-        while (iter <= readParams.maxIter 
-                    && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol 
+        while (iter <= readParams.maxIter
+                    && vectorNorm(vectorDiff(vectX2, vectX1)) >= readParams.lTol
                     && vectorNorm(functionGradient(functionToMinimize ,vectX1, readParams.methodGradient)) >= readParams.rTol)
         {
-            
-            alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
-            
             eta = etaCalc(alphak);
-
-            vectY = vectorSum(vectX1, prodVectWithCst(vectorSum(vectX1, prodVectWithCst(vectd1, -1.)), eta)); 
-            vectX2 = vectorSum(vectY, prodVectWithCst(functionGradient(functionToMinimize, vectY, readParams.methodGradient),-alphak));
-
-            std::copy(std::begin(vectX1), std::end(vectX1), std::begin(vectd1));
+            vectY = vectorSum(vectX2, prodVectWithCst(vectorSum(vectX2,prodVectWithCst(vectX1, -1.)), eta));
+            vectX3 = vectorSum(vectY, prodVectWithCst(functionGradient(functionToMinimize ,vectY, readParams.methodGradient), -alphak));
+            
             std::copy(std::begin(vectX2), std::end(vectX2), std::begin(vectX1));
+            std::copy(std::begin(vectX3), std::end(vectX3), std::begin(vectX2));
             ++iter;
+            alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX2, iter);
         }
         break;
 
