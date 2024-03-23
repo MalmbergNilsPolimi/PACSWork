@@ -15,7 +15,8 @@ declare -a learningRates=("0" "1" "2")
 declare -a gradients=("0" "1")
 
 # all possible values
-declare -a minimizations=("0" "1" "2")
+declare -a minimizations=("0")
+#declare -a minimizations=("0" "1" "2")
 
 # for all configurations possible
 for learningRate in "${learningRates[@]}"
