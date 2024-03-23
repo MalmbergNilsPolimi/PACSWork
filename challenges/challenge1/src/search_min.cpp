@@ -86,6 +86,16 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
 
     double eta{0.9};
 
+    auto etaCalc = [](double& alpha) -> double {
+        double eta{0.9};
+        if (alpha < 1)
+        {
+            eta = 1-alpha;
+        }
+        
+        return eta;
+    };
+
     switch (readParams.methodMinimization)
     {
     case 0:
@@ -115,12 +125,8 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
             vectX2 = vectorSum(vectX1, vectd1);
             alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX2, iter);
             
-            if (alphak < 1) {
-                eta = 1-alphak;
-            } else {
-                eta = 0.9;
-            }
-        
+            eta = etaCalc(alphak);
+            
             vectd2 = vectorSum(prodVectWithCst(vectd1, eta), prodVectWithCst(functionGradient(functionToMinimize ,vectX2, readParams.methodGradient) , -alphak));
 
             std::copy(std::begin(vectd2), std::end(vectd2), std::begin(vectd1));
@@ -142,11 +148,7 @@ std::vector<double> searchMinimum(FunctionWrapper functionToMinimize, FunctionWr
             
             alphak = learningRate(functionToMinimize, functionGradient, readParams, vectX1, iter);
             
-            if (alphak < 1) {
-                eta = 1-alphak;
-            } else {
-                eta = 0.9;
-            }
+            eta = etaCalc(alphak);
 
             vectY = vectorSum(vectX1, prodVectWithCst(vectorSum(vectX1, prodVectWithCst(vectd1, -1.)), eta)); 
             vectX2 = vectorSum(vectY, prodVectWithCst(functionGradient(functionToMinimize, vectY, readParams.methodGradient),-alphak));
