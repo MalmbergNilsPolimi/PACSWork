@@ -12,7 +12,7 @@ DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "Challenge1"
 
 # A line to describe the project
-PROJECT_BRIEF          = "A gradient method for the minimization of a multivariate function developped by Nils Malmberg."
+PROJECT_BRIEF          = "Minimization of a multivariate function developped by Nils Malmberg."
 
 # Output language
 OUTPUT_LANGUAGE        = English
