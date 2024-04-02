@@ -1,0 +1,11 @@
+Good use of GitHub.
+README should contain istruction for compilation and running.
+You could avoid uploading the whole libraries and tell the user to modify a line in the Makefile to link them locally.
+
+Avoid std::pow and rely on other implementations, as seen in the Labs.
+Avoid calling the header file with the definition of the Parameters struct main.hpp.
+
+You could improve the implementation of the vector operations relying on methods of the std library and replace the for loops.
+
+You could have used a function template for the choice of the method for the computation of the learning rate.
+
