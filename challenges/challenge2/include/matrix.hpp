@@ -171,6 +171,35 @@ namespace algebra {
             data = std::move(new_data);
             compressed = false; 
         }
+    
+        // Friend operator for matrix-vector multiplication
+        friend std::vector<T> operator*(const Matrix<T, Order>& matrix, const std::vector<T>& vec) {
+            std::vector<T> result;
+            
+            if constexpr (Order == StorageOrder::RowMajor) {
+                for (std::size_t i = 0; i < matrix.rows; ++i) {
+                    T sum = 0;
+                    for (const auto& pair : matrix.data) {
+                        if (pair.first[0] == i) {
+                            sum += pair.second * vec[pair.first[1]];
+                        }
+                    }
+                    result.push_back(sum);
+                }
+            } else {
+                for (std::size_t j = 0; j < matrix.cols; ++j) {
+                    T sum = 0;
+                    for (const auto& pair : matrix.data) {
+                        if (pair.first[1] == j) {
+                            sum += pair.second * vec[pair.first[0]];
+                        }
+                    }
+                    result.push_back(sum);
+                }
+            }
+            return result;
+        }
+
     };
 }
 
