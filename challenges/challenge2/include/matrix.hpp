@@ -175,7 +175,17 @@ namespace algebra {
         // Friend operator for matrix-vector multiplication
         friend std::vector<T> operator*(const Matrix<T, Order>& matrix, const std::vector<T>& vec) {
             std::vector<T> result;
-            
+
+            if constexpr (Order == StorageOrder::RowMajor) {
+                if (matrix.cols != vec.size()) {
+                    throw std::invalid_argument("Matrix and vector dimensions are not compatible for multiplication");
+                }
+            } else {
+                if (matrix.rows != vec.size()) {
+                    throw std::invalid_argument("Matrix and vector dimensions are not compatible for multiplication");
+                }
+            }
+
             if constexpr (Order == StorageOrder::RowMajor) {
                 for (std::size_t i = 0; i < matrix.rows; ++i) {
                     T sum = 0;
