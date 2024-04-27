@@ -40,8 +40,9 @@ namespace algebra {
         // Const call operator for accessing values.
         const T& operator()(std::size_t i, std::size_t j) const {
             auto it = data.find({i, j});
+            static int default_value{0};
             if (it == data.end()) {
-                return 0;
+                return default_value;
             } else {
                 return it->second;
             }
@@ -209,7 +210,67 @@ namespace algebra {
             }
             return result;
         }
+    
+        // Method to remove zeros from the matrix
+        void remove_zeros() {
+            if (compressed) {
+                uncompress();
+            }
+            
+            std::map<std::array<std::size_t, 2>, T> new_data;
+            for (const auto& pair : data) {
+                if (pair.second != 0) {
+                    new_data[pair.first] = pair.second;
+                }
+            }
+            
+            data = std::move(new_data);
+        }
 
+        
+        // Friend operator for matrix-matrix multiplication
+        friend Matrix<decltype(T() * T()), Order> operator*(const Matrix<T, Order>& matrix1, const Matrix<T, Order>& matrix2) {
+            // Check if dimensions are compatible for multiplication
+            if constexpr (Order == StorageOrder::RowMajor) {
+                if (matrix1.cols != matrix2.rows) {
+                    throw std::invalid_argument("Matrix dimensions are not compatible for multiplication");
+                }
+            } else {
+                if (matrix1.rows != matrix2.cols) {
+                    throw std::invalid_argument("Matrix dimensions are not compatible for multiplication");
+                }
+            }
+
+            // Create a result matrix with appropriate dimensions
+            Matrix<decltype(T() * T()), Order> result(matrix1.rows, matrix2.cols);
+
+            // Perform matrix multiplication
+            if constexpr (Order == StorageOrder::RowMajor)
+            {
+                for (std::size_t i = 0; i < matrix1.rows; ++i) {
+                    for (std::size_t j = 0; j < matrix2.cols; ++j) {
+                        auto& element = result(i, j);
+                        element = 0;
+                        for (std::size_t k = 0; k < matrix1.cols; ++k) {
+                            element += matrix1(i, k) * matrix2(k, j);
+                        }
+                    }
+                }
+            } else {
+                for (std::size_t i = 0; i < matrix1.cols; ++i) {
+                    for (std::size_t j = 0; j < matrix2.cols; ++j) {
+                        auto& element = result(j, i);
+                        element = 0;
+                        for (std::size_t k = 0; k < matrix1.rows; ++k) {
+                            element += matrix1(k, i) * matrix2(j, k);
+                        }
+                    }
+                }
+            }           
+
+            result.remove_zeros();
+            return result;
+        }
     };
 }
 

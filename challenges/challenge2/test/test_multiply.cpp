@@ -34,9 +34,29 @@ int main() {
     std::cout << std::endl;
 
 
-    std::cout << "\nTest : error when wrong dimensions\n" << std::endl;
-    std::vector<int> vec1 = {1, 2, 3, 4};
-    std::vector<int> result2 = matrix * vec1;
+    // std::cout << "\nTest : error when wrong dimensions in matrix-vec multiplication\n" << std::endl;
+    // std::vector<int> vec1 = {1, 2, 3, 4};
+    // std::vector<int> result2 = matrix * vec1;
+
+    auto result2 = matrix * matrix;
+
+    std::cout << "Result of matrix-matrix multiplication:" << std::endl;
+    result2.print();
+
+
+    auto result3 = matrix1 * matrix1;
+
+    std::cout << "Result of matrix1-matrix1 multiplication:" << std::endl;
+    result3.print();
+
+
+    // std::cout << "\nTest : error when wrong dimensions in matrix-matrix multiplication\n" << std::endl;
+    // algebra::Matrix<int, algebra::StorageOrder::ColumnMajor> matrix2(2,2);
+    // matrix2(0, 0) = 1;
+    // matrix2(0, 1) = 2;
+    // matrix2(1, 1) = 3;
+
+    // auto result4 = matrix1 * matrix2;
 
     return 0;
 }
