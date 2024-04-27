@@ -26,12 +26,21 @@ namespace algebra {
 
         // Non-const call operator for inserting values.
         T& operator()(std::size_t i, std::size_t j) {
-            return data[{i, j}];
+            if (compressed) {
+                throw std::runtime_error("Cannot modify elements in compressed state. Please uncompress the matrix first.");
+            } else {
+                return data[{i, j}];
+            }
         }
 
         // Const call operator for accessing values.
         const T& operator()(std::size_t i, std::size_t j) const {
-            return data.at({i, j});
+            auto it = data.find({i, j});
+            if (it == data.end()) {
+                return 0;
+            } else {
+                return it->second;
+            }
         }
 
         // Print the matrix.
