@@ -191,6 +191,7 @@ The project uses a Makefile to facilitate compilation. Here are the available co
 - `make marketReader`: Compiles the `test_marketReader.cpp` file and generates the `marketReader` executable in the `bin/` directory.
 - `make multiply`: Compiles the `test_multiply.cpp` file and generates the `multiply` executable in the `bin/` directory.
 - `make resize`: Compiles the `test_resize.cpp` file and generates the `resize` executable in the `bin/` directory.
+- `make norm`: Compiles the `test_norm.cpp` file and generates the `norm` executable in the `bin/` directory.
 
 ## Execution
 
@@ -200,6 +201,7 @@ After compilation, you can run the programs with the following commands:
 - `make run_marketReader`: Runs the `marketReader` program.
 - `make run_multiply`: Runs the `multiply` program.
 - `make run_resize`: Runs the `resize` program.
+- `make run_norm`: Runs the `norm` program.
 
 ## Cleaning Up
 
