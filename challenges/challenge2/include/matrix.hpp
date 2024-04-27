@@ -271,9 +271,6 @@ namespace algebra {
             result.remove_zeros();
             return result;
         }
-
-
-
     };
 }
 
