@@ -5,6 +5,7 @@
 #include <array>
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 
 namespace algebra {
 
@@ -18,11 +19,14 @@ namespace algebra {
 
 
     public:
-        // Constructors.
-        Matrix() = default;
+        // Constructor taking matrix size
+        Matrix(std::size_t rows, std::size_t cols) : rows(rows), cols(cols) {}
+
         std::vector<std::size_t> row_indices;
         std::vector<std::size_t> col_indices;
         std::vector<T> values;
+        std::size_t rows = 0;
+        std::size_t cols = 0;
 
         // Non-const call operator for inserting values.
         T& operator()(std::size_t i, std::size_t j) {
@@ -147,6 +151,25 @@ namespace algebra {
         // Method to check if the matrix is compressed.
         bool is_compressed() const {
             return compressed;
+        }
+
+        // Method to resize the matrix
+        void resize(std::size_t new_rows, std::size_t new_cols) {
+            if (compressed) {
+                uncompress();
+            }
+            rows = new_rows;
+            cols = new_cols;
+            
+            std::map<std::array<std::size_t, 2>, T> new_data;
+            for (const auto& pair : data) {
+                if (pair.first[0] < new_rows && pair.first[1] < new_cols) {
+                    new_data[pair.first] = pair.second;
+                }
+            }
+            
+            data = std::move(new_data);
+            compressed = false; 
         }
     };
 }
