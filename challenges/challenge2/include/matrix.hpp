@@ -26,28 +26,18 @@ namespace algebra {
 
         // Non-const call operator for inserting values.
         T& operator()(std::size_t i, std::size_t j) {
-            if constexpr(Order == StorageOrder::RowMajor)
-                return data[{i, j}];
-            else
-                return data[{j, i}];
+            return data[{i, j}];
         }
 
         // Const call operator for accessing values.
         const T& operator()(std::size_t i, std::size_t j) const {
-            if constexpr(Order == StorageOrder::RowMajor)
-                return data.at({i, j});
-            else
-                return data.at({j, i});
+            return data.at({i, j});
         }
 
         // Print the matrix.
         void print() const {
-            if constexpr (Order == StorageOrder::RowMajor) {
-                for (const auto& pair : data) {
-                    std::cout << "(" << pair.first[0] << ", " << pair.first[1] << ") -> " << pair.second << std::endl;
-                }
-            } else {
-            
+            for (const auto& pair : data) {
+                std::cout << "(" << pair.first[0] << ", " << pair.first[1] << ") -> " << pair.second << std::endl;
             }
         }
 
@@ -66,11 +56,11 @@ namespace algebra {
                 rowCount = std::max(rowCount, pair.first[0] + 1);
             }
 
-            // Calculate col count.
-            // std::size_t colCount = 0;
-            // for (const auto& pair : data) {
-            //     colCount = std::max(colCount, pair.first[1] + 1);
-            // }
+            //Calculate col count.
+            std::size_t colCount = 0;
+            for (const auto& pair : data) {
+                colCount = std::max(colCount, pair.first[1] + 1);
+            }
 
             if constexpr (Order == StorageOrder::RowMajor) {
                 // Compress row-major ordered matrix.
@@ -90,16 +80,25 @@ namespace algebra {
 
             } else {
                 // Compress column-major ordered matrix.
+                for (std::size_t i = 0; i < colCount; ++i) {
+                    col_indices.push_back(row_indices.size()); // number of elements above.
 
+                    for (const auto& pair : data) {
+                        const auto& indices = pair.first;
+                        const auto& value = pair.second;
+                        if (indices[1] == i) {
+                            row_indices.push_back(indices[0]);
+                            values.push_back(value);
+                        }
+                    }
+                }
+                col_indices.push_back(row_indices.size());
             }
 
             // Clear the map after compression.
             data.clear();
             compressed = true;
         }
-
-
-
 
         // Method to uncompress the matrix.
         void uncompress() {
@@ -119,7 +118,15 @@ namespace algebra {
 
             } else {
                 // Uncompress column-major ordered matrix.
-
+                for (std::size_t i = 0; i < col_indices.size() - 1; ++i) {
+                    const std::size_t start = col_indices[i];
+                    const std::size_t end = col_indices[i + 1];
+                    for (std::size_t k = start; k < end; ++k) {
+                        const std::size_t j = row_indices[k];
+                        const T& value = values[k];
+                        data[{j, i}] = value;
+                    }
+                }
             }
 
             row_indices.clear();
