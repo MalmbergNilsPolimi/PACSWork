@@ -6,6 +6,8 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
+#include <sstream>
 
 namespace algebra {
 
@@ -50,7 +52,7 @@ namespace algebra {
         // Print the matrix.
         void print() const {
             for (const auto& pair : data) {
-                std::cout << "(" << pair.first[0] << ", " << pair.first[1] << ") -> " << pair.second << std::endl;
+                std::cout << "(" << pair.first[0] << ", " << pair.first[1] << ") -> " << std::scientific << pair.second << std::endl;
             }
         }
 
@@ -271,6 +273,43 @@ namespace algebra {
             result.remove_zeros();
             return result;
         }
+
+        // Method to load a .mtx matrix.
+        void load_from_mtx(const std::string& filename, StorageOrder order) {
+
+            std::ifstream file(filename);
+            if (!file.is_open()) {
+                throw std::runtime_error("Unable to open file: " + filename);
+            }
+
+            std::string line;
+            std::size_t rows = 0, cols = 0, nonZeros = 0;
+            while (std::getline(file, line)) {
+                if (line[0] == '%') continue;
+                std::stringstream ss(line);
+                ss >> rows >> cols >> nonZeros;
+                break;
+            }
+
+            resize(rows, cols);
+
+            while (std::getline(file, line)) {
+                if (line[0] == '%') continue;
+                std::stringstream ss(line);
+                std::size_t row, col;
+                T value;
+                ss >> row >> col >> value;
+
+                if (order == StorageOrder::RowMajor) {
+                    (*this)(row - 1, col - 1) = value;
+                } else {
+                    (*this)(col - 1, row - 1) = value;
+                }
+            }
+
+            file.close();
+        }
+
     };
 }
 
