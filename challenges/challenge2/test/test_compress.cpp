@@ -3,9 +3,9 @@
 int main() {
     using namespace algebra;
 
-    // Creation of a dynamique matrix (row or column major).
-    Matrix<int, StorageOrder::RowMajor> matrix;
-    //Matrix<int, StorageOrder::ColumnMajor> matrix;
+    // Creation of a dynamic matrix (row or column major).
+    Matrix<int, StorageOrder::RowMajor> matrix(4,6);
+    //Matrix<int, StorageOrder::ColumnMajor> matrix(4,6);
 
     matrix(0, 0) = 10;
     matrix(0, 1) = 20;
@@ -23,6 +23,9 @@ int main() {
 
     // Compression.
     matrix.compress();
+    
+    // Test add element when the matrix is compressed.
+    //matrix(1, 5) = 80;
 
     // Print data compression.
     std::cout << "Compressed data:" << std::endl;
