@@ -1,7 +1,7 @@
 # Compiler
 CXX = g++
 # Compiler flags
-CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -I../include
+CXXFLAGS = -std=c++17 -Wall -Wextra -I../include
 # Source files
 SRCS = test_compress.cpp test_marketReader.cpp test_multiply.cpp test_resize.cpp
 # Object files directory
