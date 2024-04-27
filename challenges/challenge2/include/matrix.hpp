@@ -8,10 +8,13 @@
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
+#include <complex>
+#include <cmath>
 
 namespace algebra {
 
     enum class StorageOrder { RowMajor, ColumnMajor };
+    enum class NormType { One, Infinity, Frobenius };
     template<typename T, StorageOrder Order>
     class Matrix {
     private:
@@ -41,7 +44,7 @@ namespace algebra {
         // Const call operator for accessing values.
         const T& operator()(std::size_t i, std::size_t j) const {
             auto it = data.find({i, j});
-            static int default_value{0};
+            static T default_value{0};
             if (it == data.end()) {
                 return default_value;
             } else {
@@ -309,6 +312,42 @@ namespace algebra {
 
             file.close();
         }
+
+        // Method to compute the norm of the matrix
+        template<typename U>
+            U norm(NormType type) const {
+                if (type == NormType::One) {
+                    U max_sum = 0;
+                    for (std::size_t j = 0; j < cols; ++j) {
+                        U column_sum = 0;
+                        for (std::size_t i = 0; i < rows; ++i) {
+                            column_sum += std::abs((*this)(i, j));
+                        }
+                        max_sum = std::max(max_sum, column_sum);
+                    }
+                    return max_sum;
+                } else if (type == NormType::Infinity) {
+                    U max_sum = 0;
+                    for (std::size_t i = 0; i < rows; ++i) {
+                        U row_sum = 0;
+                        for (std::size_t j = 0; j < cols; ++j) {
+                            row_sum += std::abs((*this)(i, j));
+                        }
+                        max_sum = std::max(max_sum, row_sum);
+                    }
+                    return max_sum;
+                } else if (type == NormType::Frobenius) {
+                    U frobenius_sum = 0;
+                    for (const auto& pair : data) {
+                        frobenius_sum += std::norm(pair.second);
+                    }
+                    return std::sqrt(frobenius_sum);
+                } else {
+                    throw std::invalid_argument("Invalid norm type");
+                }
+            }
+
+
 
     };
 }

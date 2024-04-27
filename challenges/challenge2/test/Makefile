@@ -3,7 +3,7 @@ CXX = g++
 # Compiler flags
 CXXFLAGS = -std=c++17 -Wall -Wextra -I../include
 # Source files
-SRCS = test_compress.cpp test_marketReader.cpp test_multiply.cpp test_resize.cpp
+SRCS = test_compress.cpp test_marketReader.cpp test_multiply.cpp test_resize.cpp test_norm.cpp
 # Object files directory
 OBJ_DIR = obj
 # Binary files directory
@@ -14,7 +14,7 @@ OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 # Default target
 .PHONY: all
-all: directories compress marketReader multiply resize
+all: directories compress marketReader multiply resize norm
 
 # Rule for creating directories
 directories:
@@ -41,11 +41,15 @@ multiply: $(OBJ_DIR)/test_multiply.o
 resize: $(OBJ_DIR)/test_resize.o
 	$(CXX) $(CXXFLAGS) $(OBJ_DIR)/test_resize.o -o $(BIN_DIR)/resize
 
+# Rule for building norm
+norm: $(OBJ_DIR)/test_norm.o
+	$(CXX) $(CXXFLAGS) $(OBJ_DIR)/test_norm.o -o $(BIN_DIR)/norm
+
 # Rule for running a specific target
 .PHONY: run
 run: $(BIN_DIR)
 	@echo "Usage: make run [target]"
-	@echo "Available targets: compress, marketReader, multiply, resize"
+	@echo "Available targets: compress, marketReader, multiply, resize, norm"
 
 run_compress: $(BIN_DIR)/compress
 	./$(BIN_DIR)/compress
@@ -58,6 +62,9 @@ run_multiply: $(BIN_DIR)/multiply
 
 run_resize: $(BIN_DIR)/resize
 	./$(BIN_DIR)/resize
+
+run_norm: $(BIN_DIR)/norm
+	./$(BIN_DIR)/norm
 
 # Rule for cleaning up
 .PHONY: clean
