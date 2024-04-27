@@ -1,5 +1,149 @@
 # Challenge 2: A sparse matrix
 
+This is a C++ library for working with matrices, supporting both row-major and column-major storage orders. The library provides functionalities for creating, manipulating, and performing operations on matrices.
+
+
+## Features
+- Matrix Creation: Create matrices of any size with specified values.
+- Matrix Operations: Perform operations such as matrix-vector and matrix-matrix multiplication.
+- Matrix Compression: Compress matrices to save memory space when dealing with sparse matrices. The uncompress method is also implemented.
+- Matrix Loading: Load matrices from files in the Matrix Market format (.mtx).
+
+
+## Usage
+
+### Creating a Matrix
+
+To create a matrix, simply instantiate the `Matrix` class with the desired dimensions:
+```
+#include "matrix.hpp"
+
+using namespace algebra;
+
+int main() {
+    // Create a 3x3 matrix with row-major storage order
+    Matrix<double, StorageOrder::RowMajor> matrix(3, 3);
+
+    // Set values
+    matrix(0, 0) = 1.0;
+    matrix(0, 1) = 2.0;
+    // ...
+
+    // Print the matrix
+    matrix.print();
+
+    return 0;
+}
+
+```
+
+### Compress and uncompress a matrix
+
+You can compress and uncompress a matrix:
+
+```
+#include "matrix.hpp"
+
+using namespace algebra;
+
+int main() {
+    // Create a 3x3 matrix with row-major storage order
+    Matrix<double, StorageOrder::RowMajor> matrix(3, 3);
+
+    // Set values
+    matrix(0, 0) = 1.0;
+    matrix(0, 1) = 2.0;
+    // ...
+
+    matrix.compress()
+    std::cout << "Is matrix compressed? " << (matrix.is_compressed() ? "Yes" : "No") << std::endl;
+
+    matrix.uncompress()
+    std::cout << "Is matrix compressed? " << (matrix.is_compressed() ? "Yes" : "No") << std::endl;
+
+    return 0;
+}
+
+```
+
+
+### Resizing a matrix
+
+You can resize a matrix:
+
+```
+#include "matrix.hpp"
+
+using namespace algebra;
+
+int main() {
+    // Create a 3x3 matrix with row-major storage order
+    Matrix<double, StorageOrder::RowMajor> matrix(3, 3);
+
+    // Set values
+    matrix(0, 0) = 1.0;
+    matrix(0, 1) = 2.0;
+    // ...
+
+    matrix.resize(2,2);
+
+    // Print the resized matrix
+    matrix.print();
+
+    return 0;
+}
+
+```
+
+### Loading a Matrix for MatrixMarket (.mtx) format
+
+You can load a matrix from a file in the Matrix Market format (.mtx) using the `load_from_mtx method`:
+
+```
+#include "matrix.hpp"
+
+using namespace algebra;
+
+int main() {
+    Matrix<double, StorageOrder::RowMajor> matrix(0,0);
+    matrix.load_from_mtx("matrix.mtx", StorageOrder::RowMajor);
+
+    // Print the loaded matrix
+    matrix.print();
+
+    return 0;
+}
+
+```
+
+### Matrix Operations (*)
+
+Perform matrix operations such as matrix-vector and matrix-matrix multiplication. The matrix and/or the vector can store
+arithmetic types or `std::complex<T>` types:
+
+```
+#include "matrix.hpp"
+
+using namespace algebra;
+
+int main() {
+    Matrix<std::complex<double>, StorageOrder::RowMajor> complexMatrix(2, 2);
+    complexMatrix(0, 0) = std::complex<double>(1.0, 0.0);
+    complexMatrix(0, 1) = std::complex<double>(2.0, 1.0);
+    complexMatrix(1, 0) = std::complex<double>(3.0, 0.0);
+    complexMatrix(1, 1) = std::complex<double>(4.0, 4.0);
+
+    std::vector<std::complex<double>> complexVec = {std::complex<double>(1.0, 0.5), std::complex<double>(2.0, 0.0)};
+
+    auto complexResult = complexMatrix * complexVec;
+    std::cout << "Complex result: ";
+    for (auto val : complexResult) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+}
+```
+
 ## Prerequisites
 
 - A C++ compiler supporting the C++17 standard (e.g., g++).
@@ -28,3 +172,6 @@ After compilation, you can run the programs with the following commands:
 ## Cleaning Up
 
 The `make clean` command removes the object files and executables generated during compilation.
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
