@@ -5,7 +5,7 @@ This is a C++ library for working with matrices, supporting both row-major and c
 
 ## Features
 - Matrix Creation: Create matrices of any size with specified values.
-- Matrix Operations: Perform operations such as matrix-vector and matrix-matrix multiplication.
+- Matrix Operations: Perform operations such as matrix-vector and matrix-matrix multiplication, resizing.
 - Matrix Compression: Compress matrices to save memory space when dealing with sparse matrices. The uncompress method is also implemented.
 - Matrix Loading: Load matrices from files in the Matrix Market format (.mtx).
 
