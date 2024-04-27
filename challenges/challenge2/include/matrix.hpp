@@ -10,7 +10,6 @@
 namespace algebra {
 
     enum class StorageOrder { RowMajor, ColumnMajor };
-
     template<typename T, StorageOrder Order>
     class Matrix {
     private:
@@ -172,45 +171,7 @@ namespace algebra {
             data = std::move(new_data);
             compressed = false; 
         }
-    
-        // Friend operator for matrix-vector multiplication
-        friend std::vector<T> operator*(const Matrix<T, Order>& matrix, const std::vector<T>& vec) {
-            std::vector<T> result;
-
-            if constexpr (Order == StorageOrder::RowMajor) {
-                if (matrix.cols != vec.size()) {
-                    throw std::invalid_argument("Matrix and vector dimensions are not compatible for multiplication");
-                }
-            } else {
-                if (matrix.rows != vec.size()) {
-                    throw std::invalid_argument("Matrix and vector dimensions are not compatible for multiplication");
-                }
-            }
-
-            if constexpr (Order == StorageOrder::RowMajor) {
-                for (std::size_t i = 0; i < matrix.rows; ++i) {
-                    T sum = 0;
-                    for (const auto& pair : matrix.data) {
-                        if (pair.first[0] == i) {
-                            sum += pair.second * vec[pair.first[1]];
-                        }
-                    }
-                    result.push_back(sum);
-                }
-            } else {
-                for (std::size_t j = 0; j < matrix.cols; ++j) {
-                    T sum = 0;
-                    for (const auto& pair : matrix.data) {
-                        if (pair.first[1] == j) {
-                            sum += pair.second * vec[pair.first[0]];
-                        }
-                    }
-                    result.push_back(sum);
-                }
-            }
-            return result;
-        }
-    
+          
         // Method to remove zeros from the matrix
         void remove_zeros() {
             if (compressed) {
@@ -227,9 +188,48 @@ namespace algebra {
             data = std::move(new_data);
         }
 
-        
+        // Friend operator for matrix-vector multiplication
+        template<typename U = T>
+        friend std::vector<decltype(std::declval<U>() * std::declval<U>())> operator*(const Matrix<T, Order>& matrix, const std::vector<T>& vec) {
+            std::vector<decltype(std::declval<U>() * std::declval<U>())> result;
+
+            if constexpr (Order == StorageOrder::RowMajor) {
+                if (matrix.cols != vec.size()) {
+                    throw std::invalid_argument("Matrix and vector dimensions are not compatible for multiplication");
+                }
+            } else {
+                if (matrix.rows != vec.size()) {
+                    throw std::invalid_argument("Matrix and vector dimensions are not compatible for multiplication");
+                }
+            }
+
+            if constexpr (Order == StorageOrder::RowMajor) {
+                for (std::size_t i = 0; i < matrix.rows; ++i) {
+                    auto sum = U(0);
+                    for (const auto& pair : matrix.data) {
+                        if (pair.first[0] == i) {
+                            sum += pair.second * vec[pair.first[1]];
+                        }
+                    }
+                    result.push_back(sum);
+                }
+            } else {
+                for (std::size_t j = 0; j < matrix.cols; ++j) {
+                    auto sum = U(0);
+                    for (const auto& pair : matrix.data) {
+                        if (pair.first[1] == j) {
+                            sum += pair.second * vec[pair.first[0]];
+                        }
+                    }
+                    result.push_back(sum);
+                }
+            }
+            return result;
+        }
+
         // Friend operator for matrix-matrix multiplication
-        friend Matrix<decltype(T() * T()), Order> operator*(const Matrix<T, Order>& matrix1, const Matrix<T, Order>& matrix2) {
+        template<typename U = T>
+        friend Matrix<decltype(std::declval<U>() * std::declval<U>()), Order> operator*(const Matrix<T, Order>& matrix1, const Matrix<T, Order>& matrix2) {
             // Check if dimensions are compatible for multiplication
             if constexpr (Order == StorageOrder::RowMajor) {
                 if (matrix1.cols != matrix2.rows) {
@@ -242,7 +242,7 @@ namespace algebra {
             }
 
             // Create a result matrix with appropriate dimensions
-            Matrix<decltype(T() * T()), Order> result(matrix1.rows, matrix2.cols);
+            Matrix<decltype(std::declval<U>() * std::declval<U>()), Order> result(matrix1.rows, matrix2.cols);
 
             // Perform matrix multiplication
             if constexpr (Order == StorageOrder::RowMajor)
@@ -250,7 +250,7 @@ namespace algebra {
                 for (std::size_t i = 0; i < matrix1.rows; ++i) {
                     for (std::size_t j = 0; j < matrix2.cols; ++j) {
                         auto& element = result(i, j);
-                        element = 0;
+                        element = U(0);
                         for (std::size_t k = 0; k < matrix1.cols; ++k) {
                             element += matrix1(i, k) * matrix2(k, j);
                         }
@@ -260,7 +260,7 @@ namespace algebra {
                 for (std::size_t i = 0; i < matrix1.cols; ++i) {
                     for (std::size_t j = 0; j < matrix2.cols; ++j) {
                         auto& element = result(j, i);
-                        element = 0;
+                        element = U(0);
                         for (std::size_t k = 0; k < matrix1.rows; ++k) {
                             element += matrix1(k, i) * matrix2(j, k);
                         }
@@ -271,6 +271,9 @@ namespace algebra {
             result.remove_zeros();
             return result;
         }
+
+
+
     };
 }
 
