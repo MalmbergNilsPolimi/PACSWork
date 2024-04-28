@@ -145,7 +145,7 @@ int main() {
 }
 ```
 
-## Matrix Operations (norm)
+### Matrix Operations (norm)
 
 
 You can compute norms of a matrix:
