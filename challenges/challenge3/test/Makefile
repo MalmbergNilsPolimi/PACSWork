@@ -40,3 +40,7 @@ clean:
 run: $(EXEC)
 	mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER)
 	@mv *.vtk $(VTK_DIR)/
+
+valgrind_run:
+	valgrind --leak-check=full mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER)
+	@mv *.vtk $(VTK_DIR)/
