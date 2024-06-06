@@ -96,7 +96,7 @@ The results are stored in `test/data` in a `.vtk` file that can be open using Pa
 paraview data/solution.vtk
 ```
 
-Then on the ParaView window you can click on `Apply` on `Properties`. If nothing appear, check that you are displaying "solution" using "Surface" representation and 2D
+Then on the ParaView window you can click on `Apply` on `Properties`. If nothing appear, check that you are displaying "solution" using "Surface" and 2D representation.
 
 ## About changing boundary conditions
 To change boundary conditions, the user need to modify directly the function `void make_boundaries(std::vector<std::vector<double>>& U, int rank, int size)` in `src/utils.cpp`
