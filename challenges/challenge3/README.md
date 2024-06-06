@@ -89,6 +89,12 @@ In `test/`
   ```
 
 By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1 PRINT_INFO=true`
+- N is the number of points along each coordinate direction;
+- TOLERANCE is the criterion of convergence of jacobi iterations;
+- MAX_ITER is the maximum number of iterations allowed by processus;
+- PRINT_INFO is used to allow the user to remove some comments from the shell;
+
+If the user wants to change the function, it can be done directly in the `main.cpp`. To change the boundary conditions, it can be done in `utils.cpp`.
 
 ### Results
 The results are stored in `test/data` in a `.vtk` file that can be open using ParaView with the command:
