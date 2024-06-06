@@ -49,6 +49,7 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
     double tolerance = (argc > 2) ? std::stod(argv[2]) : 1e-6;
     int max_iter = (argc > 3) ? std::stoi(argv[3]) : 10000;
     bool print_info = (argc > 4) ? std::string(argv[4]) == "true" : true;
+    int dim = (argc > 5) ? std::stoi(argv[5]) : 2;
     double h = 1.0 / (n - 1);
 
     // Initialize OpenMP
@@ -153,7 +154,7 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
         print_Mm(U);
     }
 
-    write_vtk(U, n, h, rank);
+    write_vtk(U, n, h, rank, dim);
     
     // Finalize MPI
     MPI_Finalize();

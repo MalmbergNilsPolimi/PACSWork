@@ -16,6 +16,7 @@ MAX_ITER ?= 10000
 NUM_PROCS ?= 1
 OMP_NUM_THREADS ?= $(shell ./detect_threads.sh)
 PRINT_INFO ?= true
+DIMENSION_VTK ?= 2
 
 .PHONY: all clean run
 
@@ -40,9 +41,9 @@ clean:
 	rm -rf obj bin $(VTK_DIR)
 
 run: $(EXEC)
-	OMP_NUM_THREADS=$(OMP_NUM_THREADS) mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER) $(PRINT_INFO)
+	OMP_NUM_THREADS=$(OMP_NUM_THREADS) mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER) $(PRINT_INFO) $(DIMENSION_VTK)
 	@mv *.vtk $(VTK_DIR)/
 
 valgrind_run: $(EXEC)
-	valgrind --leak-check=yes --show-leak-kinds=all --track-origins=yes mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER) $(PRINT_INFO)
+	valgrind --leak-check=yes --show-leak-kinds=all --track-origins=yes mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER) $(PRINT_INFO) $(DIMENSION_VTK)
 	@mv *.vtk $(VTK_DIR)/

@@ -6,7 +6,7 @@
 #include <vector>
 
 // Function to write the solution to a VTK file
-void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int rank) {
+void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int rank, int dim) {
     int local_n = U.size();
     
     // Gather all solutions from each process
@@ -20,7 +20,7 @@ void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int r
         all_solutions.resize(n * n);
     }
     
-    MPI_Gather(local_data.data(), n * local_n, MPI_DOUBLE, all_solutions.data(), n * local_n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gather(local_data.data(), n * local_n, MPI_DOUBLE, all_solutions.data(), n * local_n, MPI_DOUBLE, 0, MPI_COMM_WORLD);  
 
     if (rank == 0) {
         std::ofstream file("solution.vtk");
@@ -32,17 +32,26 @@ void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int r
         file << "POINTS " << n * n << " float\n";
         for (int j = 0; j < n; ++j) {
             for (int i = 0; i < n; ++i) {
-                file << i * h << " " << j * h << " 0.0\n";  // Z-coordinate set to 0.0 for 2D
+                if (dim==3)
+                {
+                    file << i * h << " " << j * h << " " << all_solutions[j * n + i] << "\n";
+                } else {
+                    file << i * h << " " << j * h << " 0.0\n";  // Z-coordinate set to 0.0 for 2D
+                }   
             }
         }
-        file << "POINT_DATA " << n * n << "\n";
-        file << "SCALARS solution float 1\n";
-        file << "LOOKUP_TABLE default\n";
-        for (int j = 0; j < n; ++j) {
-            for (int i = 0; i < n; ++i) {
-                file << all_solutions[j * n + i] << "\n";
+
+        if (dim != 3)
+        {
+            file << "POINT_DATA " << n * n << "\n";
+            file << "SCALARS solution float 1\n";
+            file << "LOOKUP_TABLE default\n";
+            for (int j = 0; j < n; ++j) {
+                for (int i = 0; i < n; ++i) {
+                    file << all_solutions[j * n + i] << "\n";
+                }
             }
-        }
+        } 
         file.close();
     }
 }

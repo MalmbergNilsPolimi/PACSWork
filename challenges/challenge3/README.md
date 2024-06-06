@@ -85,14 +85,15 @@ In `test/`
   ```
 - **Run the program (specifying parameters):**
   ```sh
-  make run N=128 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=2 PRINT_INFO=false
+  make run N=128 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=2 PRINT_INFO=false DIMENSION_VTK=3
   ```
 
-By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1 PRINT_INFO=true`
+By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1 PRINT_INFO=true DIMENSION_VTK=2`
 - N is the number of points along each coordinate direction;
 - TOLERANCE is the criterion of convergence of jacobi iterations;
 - MAX_ITER is the maximum number of iterations allowed by processus;
 - PRINT_INFO is used to allow the user to remove some comments from the shell;
+- DIMENSION_VTK is used to specify if the vtk file is written for a 3D plot in paraview or a 2D plot with a color scale.
 
 If the user wants to change the function, it can be done directly in the `main.cpp`. To change the boundary conditions, it can be done in `utils.cpp`.
 
@@ -102,7 +103,7 @@ The results are stored in `test/data` in a `.vtk` file that can be open using Pa
 paraview data/solution.vtk
 ```
 
-Then on the ParaView window you can click on `Apply` on `Properties`. If nothing appear, check that you are displaying "solution" using "Surface" and 2D representation.
+Then on the ParaView window you can click on `Apply` on `Properties`. If nothing appear, check that you are displaying "solution" using "Surface" and 2D or 3D representation (in function of DIMENSION_VTK).
 
 ## About changing boundary conditions
 To change boundary conditions, the user need to modify directly the function `void make_boundaries(std::vector<std::vector<double>>& U, int rank, int size)` in `src/utils.cpp`
