@@ -7,13 +7,14 @@ SRCS := $(wildcard ../src/*.cpp) main.cpp
 OBJS := $(patsubst ../src/%.cpp,obj/%.o,$(filter-out main.cpp,$(SRCS)))
 MAIN_OBJ := obj/main.o
 EXEC = bin/jacobi
-VTK_DIR = res
+VTK_DIR = data
 
 # Valeurs par défaut
 N ?= 100
 TOLERANCE ?= 1e-6
 MAX_ITER ?= 10000
 NUM_PROCS ?= 1
+OMP_NUM_THREADS ?= $(shell ./detect_threads.sh)
 
 .PHONY: all clean run
 
@@ -38,9 +39,5 @@ clean:
 	rm -rf obj bin $(VTK_DIR)
 
 run: $(EXEC)
-	mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER)
-	@mv *.vtk $(VTK_DIR)/
-
-valgrind_run:
-	valgrind --leak-check=full mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER)
+	OMP_NUM_THREADS=$(OMP_NUM_THREADS) mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER)
 	@mv *.vtk $(VTK_DIR)/
