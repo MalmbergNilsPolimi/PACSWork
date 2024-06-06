@@ -48,7 +48,7 @@ The project is structured as follows:
 
 ## Prerequisites
 
-- An MPI-compatible compiler (e.g., `mpic++`).
+- An MPI-compatible compiler.
 - MPI and OpenMP libraries installed.
 - `make` for building the project.
 - Unix/Linux compatible operating system.
@@ -89,6 +89,14 @@ In `test/`
   ```
 
 By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1`
+
+### Results
+The results are stored in `test/res` in a `.vtk` file that can be open using ParaView with the command:
+```
+paraview res/solution.vtk
+```
+
+Then on the ParaView window you can tick `Axes Grid` on properties and click `Apply`.
 
 ## About changing boundary conditions
 To change boundary conditions, the user need to modify directly the function `void make_boundaries(std::vector<std::vector<double>>& U, int rank, int size)` in `src/utils.cpp`
