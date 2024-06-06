@@ -91,9 +91,9 @@ In `test/`
 By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1`
 
 ### Results
-The results are stored in `test/res` in a `.vtk` file that can be open using ParaView with the command:
+The results are stored in `test/data` in a `.vtk` file that can be open using ParaView with the command:
 ```
-paraview res/solution.vtk
+paraview data/solution.vtk
 ```
 
 Then on the ParaView window you can tick `Axes Grid` on properties and click `Apply`.
