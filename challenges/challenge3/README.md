@@ -85,10 +85,10 @@ In `test/`
   ```
 - **Run the program (specifying parameters):**
   ```sh
-  make run N=128 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=2
+  make run N=128 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=2 PRINT_INFO=false
   ```
 
-By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1`
+By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1 PRINT_INFO=true`
 
 ### Results
 The results are stored in `test/data` in a `.vtk` file that can be open using ParaView with the command:
@@ -96,7 +96,7 @@ The results are stored in `test/data` in a `.vtk` file that can be open using Pa
 paraview data/solution.vtk
 ```
 
-Then on the ParaView window you can tick `Axes Grid` on properties and click `Apply`.
+Then on the ParaView window you can click on `Apply` on `Properties`. If nothing appear, check that you are displaying "solution" using "Surface" representation and 2D
 
 ## About changing boundary conditions
 To change boundary conditions, the user need to modify directly the function `void make_boundaries(std::vector<std::vector<double>>& U, int rank, int size)` in `src/utils.cpp`
