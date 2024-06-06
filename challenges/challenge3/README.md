@@ -34,7 +34,7 @@ The project is structured as follows:
 - **include/**: Contains the header files.
   - `exportVTK.hpp`: Declaration of functions for exporting data in VTK format.
   - `jacobi.hpp`: Declaration of functions for the Jacobi method.
-  - `utils.hpp`: Declaration of utility functions.
+  - `utils.hpp`: Declaration of functions for boundary conditions.
 
 - **src/**: Contains the source files.
   - `exportVTK.cpp`: Implementation of functions for exporting data in VTK format.
@@ -56,6 +56,16 @@ The project is structured as follows:
 ## Compilation
 
 To compile the project, use the provided `Makefile`. You can specify some compilation and execution parameters directly in the `make` command.
+
+## Number of threads per core
+If you wan't to use the script detecting the number of threads per core to adapt parallelization you will need to you in `test/` folder the following command:
+`chmod +x detect_threads.sh`
+
+If you don't want to use the script and direclty chose the number of threads per core you can modify the line 17 in the Makefile (in `test/` folder).
+For example by writting:
+```
+OMP_NUM_THREADS ?= 2
+```
 
 ### Make Commands
 
