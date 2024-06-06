@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <chrono>
+#include <iomanip>
 
 
 void print_Mm(const std::vector<std::vector<double>>& U) {
@@ -46,16 +48,15 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
     int n = (argc > 1) ? std::stoi(argv[1]) : 100;
     double tolerance = (argc > 2) ? std::stod(argv[2]) : 1e-6;
     int max_iter = (argc > 3) ? std::stoi(argv[3]) : 10000;
+    bool print_info = (argc > 4) ? std::string(argv[4]) == "true" : true;
     double h = 1.0 / (n - 1);
 
     // Initialize OpenMP
     #pragma omp parallel
     {
-        if (omp_get_thread_num() == 0) {
-            if (rank == 0) {
-                std::cout << "Number of threads: " << size*omp_get_num_threads() << std::endl;
-                std::cout << "n: " << n << " tol: " << tolerance << " MaxIter: " << max_iter << std::endl;
-            }
+        if (print_info && omp_get_thread_num() == 0 && rank == 0) {
+            std::cout << "Number of threads: " << size*omp_get_num_threads() << std::endl;
+            std::cout << "n: " << n << " tol: " << tolerance << " MaxIter: " << max_iter << std::endl;
         }
     }
     // Determine local domain size for each process
@@ -76,6 +77,7 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
     int iter = 0;
     int converged{};
     int global_converged{};
+    auto start = std::chrono::high_resolution_clock::now();    
     do {
         // Update internal points
         #pragma omp parallel for
@@ -88,12 +90,17 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
         }
 
         // Exchange boundary rows between adjacent processes to ensure the continuity of the solution
-        if (rank > 0) {
+        if (rank > 0 && local_n > 1) {
+            //std::cout << "Rank " << rank << " sending to rank " << rank - 1 << std::endl;
             MPI_Sendrecv(&U_new[1][0], n, MPI_DOUBLE, rank - 1, 0, &U_new[0][0], n, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            //std::cout << "Rank " << rank << " received from rank " << rank - 1 << std::endl;
         }
-        if (rank < size - 1) {
+        if (rank < size - 1 && local_n > 1) {
+            //std::cout << "Rank " << rank << " sending to rank " << rank + 1 << std::endl;
             MPI_Sendrecv(&U_new[local_n - 2][0], n, MPI_DOUBLE, rank + 1, 0, &U_new[local_n - 1][0], n, MPI_DOUBLE, rank + 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            //std::cout << "Rank " << rank << " received from rank " << rank + 1 << std::endl;
         }
+
 
         // Compute local convergence criterion
         local_error = 0.0;
@@ -119,18 +126,35 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
         iter++;
     } while (!global_converged && iter < max_iter);
 
-    if (rank == 0) {
+    if (print_info)
+    {
         if (global_converged) {
-            std::cout << "Converged in " << iter << " iterations." << std::endl;
+            std::cout << "\n" << "Converged in " << iter << " iterations." << std::endl;
         } else {
             std::cout << "Did not converge within the maximum number of iterations." << std::endl;
         }
     }
 
     // Output solution
-    print_Mm(U);
-    write_vtk(U, n, h, size, rank);
+    if (print_info)
+    {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+        auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+        duration -= hours;
+        auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration);
+        duration -= minutes;
+        auto seconds = duration;
 
+        std::cout << "Computation time: " << std::setfill('0') << std::setw(2) << hours.count() << ":"
+                << std::setfill('0') << std::setw(2) << minutes.count() << ":"
+                << std::setfill('0') << std::setw(2) << seconds.count() << std::endl;
+        
+        print_Mm(U);
+    }
+
+    write_vtk(U, n, h, rank);
+    
     // Finalize MPI
     MPI_Finalize();
 }

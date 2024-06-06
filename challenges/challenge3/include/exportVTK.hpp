@@ -4,6 +4,6 @@
 #include <vector>
 
 // Function to write the solution to a VTK file
-void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int size, int rank);
+void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int rank);
 
 #endif // EXPORT_VTK_HPP
