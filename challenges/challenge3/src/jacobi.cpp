@@ -9,22 +9,38 @@
 #include <cmath>
 
 
+void print_Mm(const std::vector<std::vector<double>>& U) {
+    double max_val = U[0][0]; // Initialize max_val with the first element of the matrix
+    double min_val = U[0][0];
+
+    // Iterate through all elements of the matrix to find the maximum value
+    for (const auto& row : U) {
+        for (double val : row) {
+            if (val > max_val) {
+                max_val = val;
+            }
+
+            if (val < min_val) {
+                min_val = val;
+            }
+        }
+    }
+
+    // Print the maximum value
+    std::cout << "Maximum value of U: " << max_val << std::endl;
+    std::cout << "Minimum value of U: " << min_val << std::endl;
+
+}
+
+
 // Function to solve -Laplacien(u) = f using Jacobi iteration
 void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
-    
+
     // Initialize MPI
     MPI_Init(&argc, &argv);
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    // Initialize OpenMP
-    #pragma omp parallel
-    {
-        if (omp_get_thread_num() == 0) {
-            std::cout << "Number of threads: " << omp_get_num_threads() << std::endl;
-        }
-    }
 
     // Define domain and parameters
     int n = (argc > 1) ? std::stoi(argv[1]) : 100;
@@ -32,8 +48,16 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
     int max_iter = (argc > 3) ? std::stoi(argv[3]) : 10000;
     double h = 1.0 / (n - 1);
 
-    std::cout << "n: " << n << " tol: " << tolerance << " MaxIter: " << max_iter << std::endl;
-
+    // Initialize OpenMP
+    #pragma omp parallel
+    {
+        if (omp_get_thread_num() == 0) {
+            if (rank == 0) {
+                std::cout << "Number of threads: " << size*omp_get_num_threads() << std::endl;
+                std::cout << "n: " << n << " tol: " << tolerance << " MaxIter: " << max_iter << std::endl;
+            }
+        }
+    }
     // Determine local domain size for each process
     int base_lines = n / size; // base number of lines per process
     int extra_lines = n % size; // number of processes that will get an extra line
@@ -50,8 +74,8 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
     // Jacobi Iteration
     double local_error;
     int iter = 0;
-    bool converged = false;
-    int global_converged;
+    int converged{};
+    int global_converged{};
     do {
         // Update internal points
         #pragma omp parallel for
@@ -87,7 +111,7 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
         converged = (local_error < tolerance);
 
         // Communicate convergence status between all processes
-        MPI_Allreduce(&converged, &global_converged, 1, MPI_INT, MPI_LAND, MPI_COMM_WORLD);
+        MPI_Allreduce(&converged, &global_converged, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
 
         // Update U matrix
         std::swap(U, U_new);
@@ -104,6 +128,7 @@ void solve_jacobi(int argc, char *argv[], double (*f)(double, double)) {
     }
 
     // Output solution
+    print_Mm(U);
     write_vtk(U, n, h, size, rank);
 
     // Finalize MPI
