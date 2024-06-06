@@ -57,9 +57,9 @@ The project is structured as follows:
 
 To compile the project, use the provided `Makefile`. You can specify some compilation and execution parameters directly in the `make` command.
 
-## Number of threads per core
+### Number of threads per core
 If you wan't to use the script detecting the number of threads per core to adapt parallelization you will need to you in `test/` folder the following command:
-`chmod +x detect_threads.sh`
+```chmod +x detect_threads.sh```
 
 If you don't want to use the script and direclty chose the number of threads per core you can modify the line 17 in the Makefile (in `test/` folder).
 For example by writting:
@@ -89,3 +89,9 @@ In `test/`
   ```
 
 By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1`
+
+## About changing boundary conditions
+To change boundary conditions, the user need to modify directly the function `void make_boundaries(std::vector<std::vector<double>>& U, int rank, int size)` in `src/utils.cpp`
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
