@@ -27,11 +27,9 @@ void print_Mm(const std::vector<std::vector<double>>& U) {
             }
         }
     }
-
     // Print the maximum value
     std::cout << "Maximum value of U: " << max_val << std::endl;
     std::cout << "Minimum value of U: " << min_val << std::endl;
-
 }
 
 

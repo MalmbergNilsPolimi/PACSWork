@@ -9,7 +9,6 @@
 void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int rank, int dim) {
     int local_n = U.size();
     
-    // Gather all solutions from each process
     std::vector<double> local_data(n * local_n);
     for (int i = 0; i < local_n; ++i) {
         std::copy(U[i].begin(), U[i].end(), local_data.begin() + i * n);
@@ -28,7 +27,7 @@ void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int r
         file << "Laplace Solution\n";
         file << "ASCII\n";
         file << "DATASET STRUCTURED_GRID\n";
-        file << "DIMENSIONS " << n << " " << n << " 1\n";  // Updated to 2D grid
+        file << "DIMENSIONS " << n << " " << n << " 1\n";
         file << "POINTS " << n * n << " float\n";
         for (int j = 0; j < n; ++j) {
             for (int i = 0; i < n; ++i) {
@@ -36,7 +35,7 @@ void write_vtk(const std::vector<std::vector<double>>& U, int n, double h, int r
                 {
                     file << i * h << " " << j * h << " " << all_solutions[j * n + i] << "\n";
                 } else {
-                    file << i * h << " " << j * h << " 0.0\n";  // Z-coordinate set to 0.0 for 2D
+                    file << i * h << " " << j * h << " 0.0\n";
                 }   
             }
         }
