@@ -38,7 +38,7 @@ $(MAIN_OBJ): main.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf obj bin $(VTK_DIR)
+	rm -rf obj bin $(VTK_DIR) plot
 
 run: $(EXEC)
 	OMP_NUM_THREADS=$(OMP_NUM_THREADS) mpirun -np $(NUM_PROCS) ./$(EXEC) $(N) $(TOLERANCE) $(MAX_ITER) $(PRINT_INFO) $(DIMENSION_VTK)
