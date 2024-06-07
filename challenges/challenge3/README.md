@@ -26,7 +26,8 @@ The project is structured as follows:
 `-- test
     |-- Makefile
     |-- detect_threads.sh
-    `-- main.cpp
+    |-- main.cpp
+    `-- performance.sh
 ```
 
 ### File Descriptions
@@ -45,6 +46,7 @@ The project is structured as follows:
   - `Makefile`: Build and execution script.
   - `main.cpp`: Entry point of the program.
   - `detect_threads.sh`: Script to detect the number of threads per core.
+  - `performance.sh`: Script to plot the error in function of the number of points and process.
 
 ## Prerequisites
 
