@@ -92,18 +92,33 @@ By default the we have `N=100 TOLERANCE=1e-6 MAX_ITER=10000 NUM_PROCS=1 PRINT_IN
 - N is the number of points along each coordinate direction;
 - TOLERANCE is the criterion of convergence of jacobi iterations;
 - MAX_ITER is the maximum number of iterations allowed by processus;
+- NUM_PROCS is the number of processus;
 - PRINT_INFO is used to allow the user to remove some comments from the shell;
 - DIMENSION_VTK is used to specify if the vtk file is written for a 3D plot in paraview or a 2D plot with a color scale.
 
 If the user wants to change the function, it can be done directly in the `main.cpp`. To change the boundary conditions, it can be done in `utils.cpp`.
 
-### Results
+By using Make Commands the user will be able to test directly the Laplace solver.
+
 The results are stored in `test/data` in a `.vtk` file that can be open using ParaView with the command:
 ```
 paraview data/solution.vtk
 ```
 
 Then on the ParaView window you can click on `Apply` on `Properties`. If nothing appear, check that you are displaying "solution" using "Surface" and 2D or 3D representation (in function of DIMENSION_VTK).
+
+### Performance plot of the Laplace solver
+To compute the error in function of the number of points along each coordinate direction and in function of the number of processus the user can use the following commands:
+
+```
+cd test/
+chmod +x performance.sh
+./performance.sh
+```
+
+This part is not optimized, so it will take some time to compute and provide a result. The user can adapt the number of process line 22 and the number of points line 31 by adapting k.
+
+The results will by generated in a new folder called `plot/`. The results will be sum up in `error_plot.png`
 
 ## About changing boundary conditions
 To change boundary conditions, the user need to modify directly the function `void make_boundaries(std::vector<std::vector<double>>& U, int rank, int size)` in `src/utils.cpp`
